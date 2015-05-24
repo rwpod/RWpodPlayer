@@ -23,8 +23,15 @@ class Main extends React.Component {
   constructor(props) {
     super(props);
     this.handlePodcastsResponse = this.handlePodcastsResponse.bind(this);
+    this.handlePodcastsError = this.handlePodcastsError.bind(this);
     /* get podcasts */
-    Api.getPodcasts().then((res) => this.handlePodcastsResponse(res));
+    Api.getPodcasts()
+      .then((res) => this.handlePodcastsResponse(res))
+      .catch((err) => this.handlePodcastsError(err));
+  }
+
+  handlePodcastsError (err) {
+    console.log("Error", err);
   }
 
   handlePodcastsResponse (res) {

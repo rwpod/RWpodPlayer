@@ -22,6 +22,8 @@ var styles = StyleSheet.create({
 class Main extends React.Component {
   constructor(props) {
     super(props);
+    this.handlePodcastsResponse = this.handlePodcastsResponse.bind(this);
+    /* get podcasts */
     Api.getPodcasts().then((res) => this.handlePodcastsResponse(res));
   }
 

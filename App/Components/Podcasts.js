@@ -47,7 +47,7 @@ class Podcasts extends React.Component {
   render () {
     return (
       <View style={styles.mainContainer}>
-        <Text>Testing the Router</Text>
+        <Text>Testing the Router !!!</Text>
       </View>
     );
   }

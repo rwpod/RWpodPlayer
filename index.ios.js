@@ -32,5 +32,4 @@ class RWpodPlayer extends React.Component {
 }
 
 
-
 AppRegistry.registerComponent("RWpodPlayer", () => RWpodPlayer);

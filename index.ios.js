@@ -9,14 +9,6 @@ var {
 var Main = require("./App/Components/Main");
 
 
-var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#111111"
-  }
-});
-
-
 class RWpodPlayer extends React.Component {
   render () {
     return (
@@ -30,6 +22,14 @@ class RWpodPlayer extends React.Component {
     );
   }
 }
+
+
+var styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#111111"
+  }
+});
 
 
 AppRegistry.registerComponent("RWpodPlayer", () => RWpodPlayer);

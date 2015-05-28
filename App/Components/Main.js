@@ -10,19 +10,6 @@ var {
 var Podcasts = require("./Podcasts")
 
 
-var styles = StyleSheet.create({
-  tabContent: {
-    flex: 1,
-    alignItems: "center"
-  },
-  tabText: {
-    color: "white",
-    margin: 50
-  },
-});
-
-
-
 class Main extends React.Component {
   static title: "<TabBarIOS>";
   static description: "Tab-based navigation";
@@ -91,5 +78,18 @@ class Main extends React.Component {
     );
   }
 }
+
+
+var styles = StyleSheet.create({
+  tabContent: {
+    flex: 1,
+    alignItems: "center"
+  },
+  tabText: {
+    color: "white",
+    margin: 50
+  },
+});
+
 
 module.exports = Main;

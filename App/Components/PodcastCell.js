@@ -12,6 +12,10 @@ var {
 
 class PodcastCell extends React.Component {
 
+  static propTypes: {
+    podcast: React.PropTypes.object.idRequired
+  };
+
   constructor (props) {
     super(props);
   }

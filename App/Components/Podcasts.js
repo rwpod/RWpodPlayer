@@ -19,10 +19,14 @@ class Podcasts extends React.Component {
     super(props);
     /* binds */
     this.selectPodcast = this.selectPodcast.bind(this);
-    this._renderRow = this._renderRow.bind(this);
     this.loadPodcasts = this.loadPodcasts.bind(this);
     this.handlePodcastsResponse = this.handlePodcastsResponse.bind(this);
     this.handlePodcastsError = this.handlePodcastsError.bind(this);
+    this._renderRow = this._renderRow.bind(this);
+    this._renderPodcastsList = this._renderPodcastsList.bind(this);
+    this._renderSeparator = this._renderSeparator.bind(this);
+    this._renderLoadButtons = this._renderLoadButtons.bind(this);
+    this._renderLoader = this._renderLoader.bind(this);
     /* set state */
     this.state = {
       loading: false,
@@ -38,7 +42,7 @@ class Podcasts extends React.Component {
 
   loadPodcasts () {
     this.setState({
-      loading: false,
+      loading: true,
       dataNotLoaded: false
     });
     // load data
@@ -118,7 +122,7 @@ class Podcasts extends React.Component {
     );
   }
 
-  _renderLoadButtons() {
+  _renderLoadButtons () {
     if (this.state.dataNotLoaded) {
       return (
         <TouchableHighlight
@@ -131,7 +135,7 @@ class Podcasts extends React.Component {
     }
   }
 
-  _renderLoader() {
+  _renderLoader () {
     if (this.state.loading) {
       return (
         <ActivityIndicatorIOS
@@ -157,7 +161,7 @@ var styles = StyleSheet.create({
   loader: {
     alignItems: "center",
     justifyContent: "center",
-    height: 80
+    height: 100
   },
   retryButton: {
     height: 45,

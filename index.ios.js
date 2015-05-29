@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+
 "use strict";
 
 var React = require("react-native");
@@ -8,6 +12,7 @@ var {
   StyleSheet
 } = React;
 var Podcasts = require("./App/Components/Podcasts");
+var AboutScreen = require("./App/Components/AboutScreen")
 
 
 class RWpodPlayer extends React.Component {
@@ -17,25 +22,12 @@ class RWpodPlayer extends React.Component {
   constructor (props) {
     super(props);
     /* binds*/
-    this._renderPodcasts = this._renderPodcasts.bind(this);
+    this._isSelectedTab = this._isSelectedTab.bind(this);
     this._selectTab = this._selectTab.bind(this);
-    this._renderPodcasts = this._renderPodcasts.bind(this);
     /* state */
     this.state = {
       selectedTab: 'podcasts'
-    }
-  }
-
-  _renderPodcasts () {
-    return (
-      <NavigatorIOS
-        style={styles.container}
-        initialRoute={{
-          component: Podcasts,
-          title: "Podcasts"
-        }}
-      />
-    )
+    };
   }
 
   render () {
@@ -43,12 +35,28 @@ class RWpodPlayer extends React.Component {
       <TabBarIOS>
         <TabBarIOS.Item
           systemIcon="featured"
-          selected={this.state.selectedTab === 'podcasts'}
+          selected={this._isSelectedTab('podcasts')}
           onPress={() => this._selectTab('podcasts')}>
-          {this._renderPodcasts()}
+            <NavigatorIOS
+              style={styles.container}
+              initialRoute={{
+                component: Podcasts,
+                title: "Podcasts"
+              }}
+            />
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
+          systemIcon="contacts"
+          selected={this._isSelectedTab('about')}
+          onPress={() => this._selectTab('about')}>
+            <AboutScreen />
         </TabBarIOS.Item>
       </TabBarIOS>
     );
+  }
+
+  _isSelectedTab (tabName): boolean {
+    return this.state.selectedTab === tabName;
   }
 
   _selectTab (tabName) {

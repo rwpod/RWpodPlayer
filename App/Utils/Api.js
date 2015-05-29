@@ -1,5 +1,8 @@
-"use strict";
+/**
+ * @flow
+ */
 
+"use strict";
 
 var Api = {
   getPodcasts () {

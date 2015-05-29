@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+
 "use strict";
 
 var React = require("react-native");
@@ -34,7 +38,7 @@ class PodcastCell extends React.Component {
               style={styles.cellImage}
             />
             <View style={styles.textContainer}>
-              <Text style={styles.podcastTitle} numberOfLines={2}>
+              <Text style={styles.podcastTitle} numberOfLines={4}>
                 {this.props.podcast.title}
               </Text>
             </View>

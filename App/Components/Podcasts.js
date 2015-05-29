@@ -1,3 +1,7 @@
+/**
+ * @flow
+ */
+
 "use strict";
 
 var React = require("react-native");
@@ -10,6 +14,7 @@ var {
   StyleSheet
 } = React;
 var PodcastCell = require("./PodcastCell");
+var PodcastScreen = require("./PodcastScreen");
 var Api = require("../Utils/Api");
 
 
@@ -66,8 +71,12 @@ class Podcasts extends React.Component {
     });
   }
 
-  selectPodcast (podcast) {
-    console.log("Podcast", podcast);
+  selectPodcast (podcast: Object) {
+    this.props.navigator.push({
+      title: podcast.title,
+      component: PodcastScreen,
+      passProps: {podcast},
+    });
   }
 
   render () {
@@ -97,11 +106,16 @@ class Podcasts extends React.Component {
     }
   }
 
-  _getDataSource (podcasts) {
+  _getDataSource (podcasts: Array<any>): ListView.DataSource {
     return this.state.podcasts.cloneWithRows(podcasts);
   }
 
-  _renderRow (podcast, sectionID, rowID, highlightRowFunc) {
+  _renderRow (
+    podcast: Object,
+    sectionID: number | string,
+    rowID: number | string,
+    highlightRowFunc: (sectionID: ?number | string, rowID: ?number | string) => void,
+  ) {
     return (
       <PodcastCell
         onSelect={() => this.selectPodcast(podcast)}
@@ -112,7 +126,11 @@ class Podcasts extends React.Component {
     );
   }
 
-  _renderSeparator (sectionID, rowID, adjacentRowHighlighted) {
+  _renderSeparator (
+    sectionID: number | string,
+    rowID: number | string,
+    adjacentRowHighlighted: boolean
+  ) {
     var style = styles.rowSeparator;
     if (adjacentRowHighlighted) {
         style = [style, styles.rowSeparatorHide];

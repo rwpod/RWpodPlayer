@@ -25,7 +25,8 @@ class PodcastCell extends React.Component {
   }
 
   render () {
-    var uri = this.props.podcast.main_img;
+    var podcast = this.props.podcast;
+    var uri = podcast.main_img;
     return (
       <View>
         <TouchableHighlight
@@ -39,11 +40,19 @@ class PodcastCell extends React.Component {
             />
             <View style={styles.textContainer}>
               <Text style={styles.podcastTitle} numberOfLines={4}>
-                {this.props.podcast.title}
+                {podcast.title}
+              </Text>
+              <Text style={styles.podcastDate} numberOfLines={1}>
+                {podcast.human_date}
+                {' '}&bull;{' '}
+                <Text style={styles.podcastDuration}>
+                  Duration {podcast.audio_duration}
+                </Text>
               </Text>
             </View>
           </View>
         </TouchableHighlight>
+        <View style={styles.cellBorder}></View>
       </View>
     );
   }
@@ -79,6 +88,13 @@ var styles = StyleSheet.create({
     // Trick to get the thinest line the device can display
     height: 1 / PixelRatio.get(),
     marginLeft: 1
+  },
+  podcastDate: {
+    color: '#999999',
+    fontSize: 12,
+  },
+  podcastDuration: {
+    color: '#999999'
   }
 });
 

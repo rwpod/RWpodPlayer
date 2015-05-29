@@ -71,7 +71,8 @@ class RWpodPlayer extends React.Component {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#111111"
+    backgroundColor: "#111111",
+    marginBottom: 50
   },
   tabContent: {
     flex: 1,

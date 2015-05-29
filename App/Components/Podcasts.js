@@ -32,11 +32,17 @@ class Podcasts extends React.Component {
     this._renderSeparator = this._renderSeparator.bind(this);
     this._renderLoadButtons = this._renderLoadButtons.bind(this);
     this._renderLoader = this._renderLoader.bind(this);
+    this._onEndReached = this._onEndReached.bind(this);
+    this._mergeNewPodcasts = this._mergeNewPodcasts.bind(this);
+    this._noMorePodcasts = this._noMorePodcasts.bind(this);
     /* set state */
     this.state = {
       loading: false,
       dataNotLoaded: false,
-      podcasts: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2 })
+      canLoadMore: true,
+      currentPage: 1,
+      podcasts: [],
+      dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2 })
     }
   }
 
@@ -67,7 +73,8 @@ class Podcasts extends React.Component {
     this.setState({
       loading: false,
       dataNotLoaded: false,
-      podcasts: this._getDataSource(res)
+      podcasts: res,
+      dataSource: this._getDataSource(res)
     });
   }
 
@@ -95,8 +102,9 @@ class Podcasts extends React.Component {
         <ListView
           ref="listview"
           renderSeparator={this._renderSeparator}
-          dataSource={this.state.podcasts}
+          dataSource={this.state.dataSource}
           renderRow={this._renderRow}
+          onEndReached={this._onEndReached}
           automaticallyAdjustContentInsets={false}
           keyboardDismissMode="onDrag"
           keyboardShouldPersistTaps={true}
@@ -107,7 +115,7 @@ class Podcasts extends React.Component {
   }
 
   _getDataSource (podcasts: Array<any>): ListView.DataSource {
-    return this.state.podcasts.cloneWithRows(podcasts);
+    return this.state.dataSource.cloneWithRows(podcasts);
   }
 
   _renderRow (
@@ -138,6 +146,31 @@ class Podcasts extends React.Component {
     return (
       <View key={"SEP_" + sectionID + "_" + rowID}  style={style} />
     );
+  }
+
+  _onEndReached () {
+    if (this.state.canLoadMore){
+      /* get api */
+      var currentPage = this.state.currentPage + 1;
+      Api.getPodcasts(currentPage)
+        .then((res) => this._mergeNewPodcasts(res, currentPage))
+        .catch((err) => this._noMorePodcasts(err));
+    }
+  }
+
+  _mergeNewPodcasts (res, currentPage) {
+    var podcasts = this.state.podcasts.concat(res);
+    this.setState({
+      podcasts: podcasts,
+      currentPage: currentPage,
+      dataSource: this._getDataSource(podcasts)
+    });
+  }
+
+  _noMorePodcasts (err) {
+    this.setState({
+      canLoadMore: false
+    });
   }
 
   _renderLoadButtons () {

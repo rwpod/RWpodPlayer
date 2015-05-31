@@ -150,19 +150,22 @@ class Podcasts extends React.Component {
 
   _onEndReached () {
     if (this.state.canLoadMore){
-      /* get api */
+      /* set currentPage */
       var currentPage = this.state.currentPage + 1;
+      this.setState({
+        currentPage: currentPage
+      });
+      /* get api */
       Api.getPodcasts(currentPage)
-        .then((res) => this._mergeNewPodcasts(res, currentPage))
+        .then((res) => this._mergeNewPodcasts(res))
         .catch((err) => this._noMorePodcasts(err));
     }
   }
 
-  _mergeNewPodcasts (res, currentPage) {
+  _mergeNewPodcasts (res: Array<any>) {
     var podcasts = this.state.podcasts.concat(res);
     this.setState({
       podcasts: podcasts,
-      currentPage: currentPage,
       dataSource: this._getDataSource(podcasts)
     });
   }

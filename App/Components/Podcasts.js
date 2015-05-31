@@ -13,6 +13,7 @@ var {
   View,
   StyleSheet
 } = React;
+var Subscribable = require("Subscribable");
 var PodcastCell = require("./PodcastCell");
 var PodcastScreen = require("./PodcastScreen");
 var Api = require("../Utils/Api");
@@ -20,6 +21,10 @@ var Api = require("../Utils/Api");
 
 
 class Podcasts extends React.Component {
+  static propTypes: {
+    emitter: React.PropTypes.object.idRequired
+  };
+
   constructor(props) {
     super(props);
     /* binds */
@@ -35,6 +40,7 @@ class Podcasts extends React.Component {
     this._onEndReached = this._onEndReached.bind(this);
     this._mergeNewPodcasts = this._mergeNewPodcasts.bind(this);
     this._noMorePodcasts = this._noMorePodcasts.bind(this);
+    this._handleRefreshPodcasts = this._handleRefreshPodcasts.bind(this);
     /* set state */
     this.state = {
       loading: false,
@@ -47,14 +53,30 @@ class Podcasts extends React.Component {
   }
 
   componentDidMount () {
+    /* mixin */
+    Subscribable.Mixin.componentWillMount();
     /* get podcasts */
+    if (0 === this.state.podcasts.length) {
+      this.loadPodcasts();
+    }
+    Subscribable.Mixin.addListenerOn(this.props.emitter, 'refreshPodcasts', this._handleRefreshPodcasts);
+  }
+
+  componentWillUnmount () {
+    /* mixin */
+    Subscribable.Mixin.componentWillUnmount();
+  }
+
+  _handleRefreshPodcasts() {
     this.loadPodcasts();
   }
 
   loadPodcasts () {
     this.setState({
       loading: true,
-      dataNotLoaded: false
+      dataNotLoaded: false,
+      currentPage: 1,
+      canLoadMore: true
     });
     // load data
     Api.getPodcasts()
@@ -73,6 +95,8 @@ class Podcasts extends React.Component {
     this.setState({
       loading: false,
       dataNotLoaded: false,
+      currentPage: 1,
+      canLoadMore: true,
       podcasts: res,
       dataSource: this._getDataSource(res)
     });

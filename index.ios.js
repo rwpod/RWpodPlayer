@@ -11,6 +11,7 @@ var {
   TabBarIOS,
   StyleSheet
 } = React;
+var EventEmitter = require("EventEmitter");
 var Podcasts = require("./App/Components/Podcasts");
 var AboutScreen = require("./App/Components/AboutScreen")
 
@@ -24,9 +25,13 @@ class RWpodPlayer extends React.Component {
     /* binds*/
     this._isSelectedTab = this._isSelectedTab.bind(this);
     this._selectTab = this._selectTab.bind(this);
+    this._refreshPodcasts = this._refreshPodcasts.bind(this);
+    /* event emitter */
+    this.emitter = new EventEmitter();
     /* state */
     this.state = {
-      selectedTab: 'podcasts'
+      selectedTab: 'podcasts',
+      myRightBtnEvent: 0
     };
   }
 
@@ -41,7 +46,10 @@ class RWpodPlayer extends React.Component {
               style={styles.container}
               initialRoute={{
                 component: Podcasts,
-                title: "Podcasts"
+                title: "Podcasts",
+                rightButtonTitle: "Refresh",
+                passProps: { emitter: this.emitter },
+                onRightButtonPress: this._refreshPodcasts
               }}
             />
         </TabBarIOS.Item>
@@ -55,8 +63,12 @@ class RWpodPlayer extends React.Component {
     );
   }
 
+  _refreshPodcasts () {
+    this.emitter.emit("refreshPodcasts", true);
+  }
+
   _isSelectedTab (tabName): boolean {
-    return this.state.selectedTab === tabName;
+    return tabName === this.state.selectedTab;
   }
 
   _selectTab (tabName) {

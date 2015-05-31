@@ -27,11 +27,6 @@ class PodcastScreen extends React.Component {
     /* binds */
     this.onNavigationStateChange = this.onNavigationStateChange.bind(this);
     this._improveHTML = this._improveHTML.bind(this);
-    /* state */
-    this.state = {
-      html: this._improveHTML()
-    }
-
   }
 
   _improveHTML() {
@@ -39,11 +34,6 @@ class PodcastScreen extends React.Component {
   }
 
   onNavigationStateChange(navState) {
-    if (navState.url){
-      this.setState({
-        html: this._improveHTML()
-      });
-    }
     console.log("onNavigationStateChange", navState);
   }
 
@@ -82,7 +72,7 @@ class PodcastScreen extends React.Component {
             automaticallyAdjustContentInsets={false}
             bounces={true}
             style={styles.webView}
-            html={this.state.html}
+            html={this._improveHTML()}
             javaScriptEnabledAndroid={false}
             onNavigationStateChange={this.onNavigationStateChange}
             shouldInjectAJAXHandler={false}

@@ -30,8 +30,7 @@ class RWpodPlayer extends React.Component {
     this.emitter = new EventEmitter();
     /* state */
     this.state = {
-      selectedTab: 'podcasts',
-      myRightBtnEvent: 0
+      selectedTab: 'podcasts'
     };
   }
 

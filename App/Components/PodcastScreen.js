@@ -31,8 +31,11 @@ class PodcastScreen extends React.Component {
     this._improveHTML = this._improveHTML.bind(this);
   }
 
-  componentDidMount () {
+  componentWillMount () {
     Viewport.getDimensions(this._changedOrientation);
+  }
+
+  componentDidMount () {
     Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._changedOrientation);
   }
 

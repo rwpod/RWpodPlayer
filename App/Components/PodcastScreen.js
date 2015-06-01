@@ -15,6 +15,7 @@ var {
   ScrollView,
   StyleSheet
 } = React;
+var Viewport = require('react-native-viewport');
 
 class PodcastScreen extends React.Component {
 
@@ -26,11 +27,24 @@ class PodcastScreen extends React.Component {
     super(props);
     /* binds */
     this.onNavigationStateChange = this.onNavigationStateChange.bind(this);
+    this._changedOrientation = this._changedOrientation.bind(this);
     this._improveHTML = this._improveHTML.bind(this);
+  }
+
+  componentDidMount () {
+    Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._changedOrientation);
+  }
+
+  componentWillUnmount () {
+    Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._changedOrientation);
   }
 
   _improveHTML() {
     return this.props.podcast.description.replace(/<a\s+/g, "<a target=\"_blank\" ");
+  }
+
+  _changedOrientation (dimensions: Object) {
+    console.log("changedOrientation", dimensions);
   }
 
   onNavigationStateChange(navState) {

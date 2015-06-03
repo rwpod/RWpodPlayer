@@ -26,9 +26,16 @@ class PodcastScreen extends React.Component {
   constructor (props) {
     super(props);
     /* binds */
-    this.onNavigationStateChange = this.onNavigationStateChange.bind(this);
+    this._onNavigationStateChange = this._onNavigationStateChange.bind(this);
     this._changedOrientation = this._changedOrientation.bind(this);
+    this._isDeviseInPortrait = this._isDeviseInPortrait.bind(this);
+    this._renderPortrait = this._renderPortrait.bind(this);
+    this._renderLandscape = this._renderLandscape.bind(this);
     this._improveHTML = this._improveHTML.bind(this);
+    /* state */
+    this.state = {
+      deviseOrientation: "portrait"
+    }
   }
 
   componentWillMount () {
@@ -48,14 +55,38 @@ class PodcastScreen extends React.Component {
   }
 
   _changedOrientation (dimensions: Object) {
-    console.log("changedOrientation", dimensions);
+    var deviseOrientation = "portrait";
+    if (dimensions.width > dimensions.height) {
+      deviseOrientation = "landscape";
+    }
+    /* set state */
+    this.setState({
+      deviseOrientation: deviseOrientation
+    });
   }
 
-  onNavigationStateChange(navState) {
+
+  _onNavigationStateChange (navState) {
     console.log("onNavigationStateChange", navState);
   }
 
+
   render () {
+    if (this._isDeviseInPortrait()) {
+      return this._renderPortrait();
+    } else {
+      return this._renderLandscape();
+    }
+
+  }
+
+
+  _isDeviseInPortrait (): boolean {
+    return "portrait" === this.state.deviseOrientation;
+  }
+
+
+  _renderPortrait() {
     var podcast = this.props.podcast;
     var uri = podcast.main_img;
 
@@ -92,11 +123,24 @@ class PodcastScreen extends React.Component {
             style={styles.webView}
             html={this._improveHTML()}
             javaScriptEnabledAndroid={false}
-            onNavigationStateChange={this.onNavigationStateChange}
+            onNavigationStateChange={this._onNavigationStateChange}
             shouldInjectAJAXHandler={false}
             startInLoadingState={false}
           />
         </View>
+      </View>
+    );
+  }
+
+  _renderLandscape () {
+    var podcast = this.props.podcast;
+    var uri = podcast.main_img;
+
+    return (
+      <View style={styles.mainContainer}>
+        <Text style={styles.podcastTitle} numberOfLines={4}>
+          {podcast.title}
+        </Text>
       </View>
     );
   }

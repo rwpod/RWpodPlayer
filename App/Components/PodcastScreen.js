@@ -91,36 +91,31 @@ class PodcastScreen extends React.Component {
     var uri = podcast.main_img;
 
     return (
-      <View style={styles.mainContainer}>
-        <Text style={styles.podcastTitle} numberOfLines={4}>
+      <View style={styles.portraitMainContainer}>
+        <Text style={styles.portraitPodcastTitle} numberOfLines={4}>
           {podcast.title}
         </Text>
-        <View style={styles.controlContainer}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={{uri}}
-              style={styles.podcastImage}
-            />
-          </View>
-          <View style={styles.audioContainer}>
-            <Text> Here will be audio controlls </Text>
-          </View>
+        <View style={styles.portraitImageContainer}>
+          <Image
+            source={{uri}}
+            style={styles.portraitPodcastImage}
+          />
         </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.podcastDate} numberOfLines={1}>
+        <View style={styles.portraitInfoContainer}>
+          <Text style={styles.portraitPodcastDate} numberOfLines={1}>
             {podcast.human_date}
             {' '}&bull;{' '}
-            <Text style={styles.podcastDuration}>
+            <Text style={styles.portraitPodcastDuration}>
               Duration {podcast.audio_duration}
             </Text>
           </Text>
         </View>
-        <View style={styles.webContainer}>
+        <View style={styles.portraitWebContainer}>
           <WebView
             ref="webview"
             automaticallyAdjustContentInsets={false}
             bounces={true}
-            style={styles.webView}
+            style={styles.portraitWebView}
             html={this._improveHTML()}
             javaScriptEnabledAndroid={false}
             onNavigationStateChange={this._onNavigationStateChange}
@@ -137,10 +132,31 @@ class PodcastScreen extends React.Component {
     var uri = podcast.main_img;
 
     return (
-      <View style={styles.mainContainer}>
-        <Text style={styles.podcastTitle} numberOfLines={4}>
+      <View style={styles.landscapeMainContainer}>
+        <Text style={styles.landscapePodcastTitle} numberOfLines={4}>
           {podcast.title}
         </Text>
+        <View style={styles.landscapeContentContainer}>
+          <View style={styles.landscapeImageContainer}>
+            <Image
+              source={{uri}}
+              style={styles.landscapePodcastImage}
+            />
+          </View>
+          <View style={styles.landscapeWebContainer}>
+            <WebView
+              ref="webview"
+              automaticallyAdjustContentInsets={false}
+              bounces={true}
+              style={styles.landscapeWebView}
+              html={this._improveHTML()}
+              javaScriptEnabledAndroid={false}
+              onNavigationStateChange={this._onNavigationStateChange}
+              shouldInjectAJAXHandler={false}
+              startInLoadingState={false}
+            />
+          </View>
+        </View>
       </View>
     );
   }
@@ -150,55 +166,87 @@ class PodcastScreen extends React.Component {
 
 
 var styles = StyleSheet.create({
-  mainContainer: {
+  portraitMainContainer: {
     flex: 1,
     marginTop: 65,
     flexDirection: "column",
     backgroundColor: "#FFFFFF"
   },
-  podcastTitle: {
+  portraitPodcastTitle: {
     fontSize: 16,
     fontWeight: "bold"
   },
-  controlContainer: {
-    flex: 1,
-    flexDirection: "row",
-  },
-  imageContainer: {
+  portraitImageContainer: {
     alignItems: "center",
     marginTop: 3,
     marginBottom: 3,
   },
-  podcastImage: {
+  portraitPodcastImage: {
     backgroundColor: "#dddddd",
     height: 200,
     width: 200,
   },
-  audioContainer: {
+  portraitAudioContainer: {
 
   },
-  infoContainer: {
+  portraitInfoContainer: {
     alignItems: "center",
   },
-  podcastDate: {
+  portraitPodcastDate: {
     color: '#999999',
     fontSize: 16,
     padding: 5
   },
-  podcastDuration: {
+  portraitPodcastDuration: {
     color: '#999999',
     fontSize: 16,
   },
-  webContainer: {
+  portraitWebContainer: {
     flex: 1,
     alignItems: "stretch",
     borderColor: "#CCCCCC",
     borderWidth: 1,
   },
-  webView: {
+  portraitWebView: {
     flex: 1,
     backgroundColor: "#dddddd",
-  }
+  },
+
+
+  landscapeMainContainer: {
+    flex: 1,
+    marginTop: 65,
+    flexDirection: "column",
+    backgroundColor: "#FFFFFF"
+  },
+  landscapePodcastTitle: {
+    fontSize: 16,
+    fontWeight: "bold"
+  },
+  landscapeContentContainer: {
+    flex: 1,
+    flexDirection: "row"
+  },
+  landscapeImageContainer: {
+    alignItems: "center",
+    marginTop: 3,
+    marginBottom: 3,
+  },
+  landscapePodcastImage: {
+    backgroundColor: "#dddddd",
+    height: 200,
+    width: 200,
+  },
+  landscapeWebContainer: {
+    flex: 1,
+    alignItems: "stretch",
+    borderColor: "#CCCCCC",
+    borderWidth: 1,
+  },
+  landscapeWebView: {
+    flex: 1,
+    backgroundColor: "#dddddd",
+  },
 });
 
 

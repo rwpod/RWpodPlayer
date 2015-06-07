@@ -23,11 +23,12 @@ class PodcastScreen extends React.Component {
     podcast: React.PropTypes.object.idRequired
   };
 
-  constructor (props) {
+  constructor(props) {
     super(props);
     /* binds */
     this._onNavigationStateChange = this._onNavigationStateChange.bind(this);
     this._changedOrientation = this._changedOrientation.bind(this);
+    this._firedChangedOrientation = this._firedChangedOrientation.bind(this);
     this._isDeviseInPortrait = this._isDeviseInPortrait.bind(this);
     this._renderPortrait = this._renderPortrait.bind(this);
     this._renderLandscape = this._renderLandscape.bind(this);
@@ -38,23 +39,28 @@ class PodcastScreen extends React.Component {
     }
   }
 
-  componentWillMount () {
+  componentWillMount() {
     Viewport.getDimensions(this._changedOrientation);
   }
 
-  componentDidMount () {
-    Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._changedOrientation);
+  componentDidMount() {
+    Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
   }
 
-  componentWillUnmount () {
-    Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._changedOrientation);
+  componentWillUnmount() {
+    Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
   }
 
   _improveHTML() {
     return this.props.podcast.description.replace(/<a\s+/g, "<a target=\"_blank\" ");
   }
 
-  _changedOrientation (dimensions: Object) {
+  _firedChangedOrientation(dimensions: Object) {
+    // dimensions is invalid
+    Viewport.getDimensions(this._changedOrientation);
+  }
+
+  _changedOrientation(dimensions: Object) {
     var deviseOrientation = "portrait";
     if (dimensions.width > dimensions.height) {
       deviseOrientation = "landscape";
@@ -66,12 +72,12 @@ class PodcastScreen extends React.Component {
   }
 
 
-  _onNavigationStateChange (navState) {
+  _onNavigationStateChange(navState) {
     console.log("onNavigationStateChange", navState);
   }
 
 
-  render () {
+  render() {
     if (this._isDeviseInPortrait()) {
       return this._renderPortrait();
     } else {
@@ -81,7 +87,7 @@ class PodcastScreen extends React.Component {
   }
 
 
-  _isDeviseInPortrait (): boolean {
+  _isDeviseInPortrait(): boolean {
     return "portrait" === this.state.deviseOrientation;
   }
 
@@ -127,7 +133,7 @@ class PodcastScreen extends React.Component {
     );
   }
 
-  _renderLandscape () {
+  _renderLandscape() {
     var podcast = this.props.podcast;
     var uri = podcast.main_img;
 

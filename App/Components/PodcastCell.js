@@ -20,11 +20,11 @@ class PodcastCell extends React.Component {
     podcast: React.PropTypes.object.idRequired
   };
 
-  constructor (props) {
+  constructor(props) {
     super(props);
   }
 
-  render () {
+  render() {
     var podcast = this.props.podcast;
     var uri = podcast.main_img;
     return (

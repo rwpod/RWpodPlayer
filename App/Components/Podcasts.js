@@ -52,7 +52,7 @@ class Podcasts extends React.Component {
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     /* mixin */
     Subscribable.Mixin.componentWillMount();
     /* get podcasts */
@@ -62,7 +62,7 @@ class Podcasts extends React.Component {
     Subscribable.Mixin.addListenerOn(this.props.emitter, 'refreshPodcasts', this._handleRefreshPodcasts);
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     /* mixin */
     Subscribable.Mixin.componentWillUnmount();
   }
@@ -71,7 +71,7 @@ class Podcasts extends React.Component {
     this.loadPodcasts();
   }
 
-  loadPodcasts () {
+  loadPodcasts() {
     this.setState({
       loading: true,
       dataNotLoaded: false,
@@ -84,14 +84,14 @@ class Podcasts extends React.Component {
       .catch((err) => this.handlePodcastsError(err));
   }
 
-  handlePodcastsError (err) {
+  handlePodcastsError(err) {
     this.setState({
       loading: false,
       dataNotLoaded: true
     });
   }
 
-  handlePodcastsResponse (res) {
+  handlePodcastsResponse(res) {
     this.setState({
       loading: false,
       dataNotLoaded: false,
@@ -102,7 +102,7 @@ class Podcasts extends React.Component {
     });
   }
 
-  selectPodcast (podcast: Object) {
+  selectPodcast(podcast: Object) {
     this.props.navigator.push({
       title: podcast.title,
       component: PodcastScreen,
@@ -110,7 +110,7 @@ class Podcasts extends React.Component {
     });
   }
 
-  render () {
+  render() {
     return (
       <View style={styles.mainContainer}>
         {this._renderLoader()}
@@ -138,11 +138,11 @@ class Podcasts extends React.Component {
     }
   }
 
-  _getDataSource (podcasts: Array<any>): ListView.DataSource {
+  _getDataSource(podcasts: Array<any>): ListView.DataSource {
     return this.state.dataSource.cloneWithRows(podcasts);
   }
 
-  _renderRow (
+  _renderRow(
     podcast: Object,
     sectionID: number | string,
     rowID: number | string,
@@ -158,7 +158,7 @@ class Podcasts extends React.Component {
     );
   }
 
-  _renderSeparator (
+  _renderSeparator(
     sectionID: number | string,
     rowID: number | string,
     adjacentRowHighlighted: boolean
@@ -172,7 +172,7 @@ class Podcasts extends React.Component {
     );
   }
 
-  _onEndReached () {
+  _onEndReached() {
     if (this.state.canLoadMore){
       /* set currentPage */
       var currentPage = this.state.currentPage + 1;
@@ -186,7 +186,7 @@ class Podcasts extends React.Component {
     }
   }
 
-  _mergeNewPodcasts (res: Array<any>) {
+  _mergeNewPodcasts(res: Array<any>) {
     var podcasts = this.state.podcasts.concat(res);
     this.setState({
       podcasts: podcasts,
@@ -194,13 +194,13 @@ class Podcasts extends React.Component {
     });
   }
 
-  _noMorePodcasts (err) {
+  _noMorePodcasts(err) {
     this.setState({
       canLoadMore: false
     });
   }
 
-  _renderLoadButtons () {
+  _renderLoadButtons() {
     if (this.state.dataNotLoaded) {
       return (
         <TouchableHighlight
@@ -213,7 +213,7 @@ class Podcasts extends React.Component {
     }
   }
 
-  _renderLoader () {
+  _renderLoader() {
     if (this.state.loading) {
       return (
         <ActivityIndicatorIOS

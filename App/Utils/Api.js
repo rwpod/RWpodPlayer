@@ -5,7 +5,7 @@
 "use strict";
 
 var Api = {
-  getPodcasts (page: ?number) {
+  getPodcasts(page: ?number) {
     var url = "http://www.rwpod.com/api/podcasts";
     if (page) {
       url += "/page/" + page.toString();

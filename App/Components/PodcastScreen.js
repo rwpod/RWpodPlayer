@@ -83,7 +83,6 @@ class PodcastScreen extends React.Component {
     } else {
       return this._renderLandscape();
     }
-
   }
 
 

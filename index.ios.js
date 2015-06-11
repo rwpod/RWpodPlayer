@@ -63,7 +63,7 @@ class RWpodPlayer extends React.Component {
   }
 
   _refreshPodcasts () {
-    this.emitter.emit("refreshPodcasts", true);
+    this.emitter.emit("refreshPodcasts");
   }
 
   _isSelectedTab (tabName): boolean {
@@ -84,15 +84,7 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#111111",
     marginBottom: 50
-  },
-  tabContent: {
-    flex: 1,
-    alignItems: "center"
-  },
-  tabText: {
-    color: "white",
-    margin: 50
-  },
+  }
 });
 
 

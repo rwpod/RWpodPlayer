@@ -7,7 +7,6 @@
 var React = require("react-native");
 var {
   Image,
-  PixelRatio,
   Text,
   TouchableHighlight,
   View,
@@ -97,9 +96,6 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.portraitMainContainer}>
-        <Text style={styles.portraitPodcastTitle} numberOfLines={4}>
-          {podcast.title}
-        </Text>
         <View style={styles.portraitImageContainer}>
           <Image
             source={{uri}}
@@ -138,29 +134,35 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.landscapeMainContainer}>
-        <Text style={styles.landscapePodcastTitle} numberOfLines={4}>
-          {podcast.title}
-        </Text>
-        <View style={styles.landscapeContentContainer}>
+        <View style={styles.landscapeCompContainer}>
           <View style={styles.landscapeImageContainer}>
             <Image
               source={{uri}}
               style={styles.landscapePodcastImage}
             />
           </View>
-          <View style={styles.landscapeWebContainer}>
-            <WebView
-              ref="webview"
-              automaticallyAdjustContentInsets={false}
-              bounces={true}
-              style={styles.landscapeWebView}
-              html={this._improveHTML()}
-              javaScriptEnabledAndroid={false}
-              onNavigationStateChange={this._onNavigationStateChange}
-              shouldInjectAJAXHandler={false}
-              startInLoadingState={false}
-            />
+          <View style={styles.landscapeInfoContainer}>
+            <Text style={styles.landscapePodcastDate} numberOfLines={1}>
+              {podcast.human_date}
+              {' '}&bull;{' '}
+              <Text style={styles.landscapePodcastDuration}>
+                Duration {podcast.audio_duration}
+              </Text>
+            </Text>
           </View>
+        </View>
+        <View style={styles.landscapeWebContainer}>
+          <WebView
+            ref="webview"
+            automaticallyAdjustContentInsets={false}
+            bounces={true}
+            style={styles.landscapeWebView}
+            html={this._improveHTML()}
+            javaScriptEnabledAndroid={false}
+            onNavigationStateChange={this._onNavigationStateChange}
+            shouldInjectAJAXHandler={false}
+            startInLoadingState={false}
+          />
         </View>
       </View>
     );
@@ -176,10 +178,6 @@ var styles = StyleSheet.create({
     marginTop: 65,
     flexDirection: "column",
     backgroundColor: "#FFFFFF"
-  },
-  portraitPodcastTitle: {
-    fontSize: 16,
-    fontWeight: "bold"
   },
   portraitImageContainer: {
     alignItems: "center",
@@ -221,16 +219,13 @@ var styles = StyleSheet.create({
   landscapeMainContainer: {
     flex: 1,
     marginTop: 65,
-    flexDirection: "column",
+    flexDirection: "row",
     backgroundColor: "#FFFFFF"
   },
-  landscapePodcastTitle: {
-    fontSize: 16,
-    fontWeight: "bold"
-  },
-  landscapeContentContainer: {
-    flex: 1,
-    flexDirection: "row"
+  landscapeCompContainer: {
+    alignItems: "center",
+    marginTop: 3,
+    marginBottom: 3,
   },
   landscapeImageContainer: {
     alignItems: "center",
@@ -241,6 +236,18 @@ var styles = StyleSheet.create({
     backgroundColor: "#dddddd",
     height: 200,
     width: 200,
+  },
+  landscapeInfoContainer: {
+    alignItems: "center",
+  },
+  landscapePodcastDate: {
+    color: '#999999',
+    fontSize: 16,
+    padding: 5
+  },
+  landscapePodcastDuration: {
+    color: '#999999',
+    fontSize: 16,
   },
   landscapeWebContainer: {
     flex: 1,

@@ -15,6 +15,7 @@ var {
   StyleSheet
 } = React;
 var Viewport = require('react-native-viewport');
+var Video = require('react-native-video');
 
 class PodcastScreen extends React.Component {
 
@@ -32,9 +33,26 @@ class PodcastScreen extends React.Component {
     this._renderPortrait = this._renderPortrait.bind(this);
     this._renderLandscape = this._renderLandscape.bind(this);
     this._improveHTML = this._improveHTML.bind(this);
+    /* audio binds */
+    this.renderAudioComponent = this.renderAudioComponent.bind(this);
+    this.audioOnLoadStart = this.audioOnLoadStart.bind(this);
+    this.audioOnLoad = this.audioOnLoad.bind(this);
+    this.audioOnProgress = this.audioOnProgress.bind(this);
+    this.audioOnEnd = this.audioOnEnd.bind(this);
+    this.audioOnError = this.audioOnError.bind(this);
+    this._onTogglePlay = this._onTogglePlay.bind(this);
     /* state */
     this.state = {
-      deviseOrientation: "portrait"
+      deviseOrientation: "portrait",
+      audioControls: {
+        paused: true
+      },
+      audioData: {
+        loading: false,
+        haveError: false,
+        duration: 0.0,
+        currentTime: 0.0
+      }
     }
   }
 
@@ -96,11 +114,14 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.portraitMainContainer}>
+        {this.renderAudioComponent(podcast)}
         <View style={styles.portraitImageContainer}>
-          <Image
-            source={{uri}}
-            style={styles.portraitPodcastImage}
-          />
+          <TouchableHighlight onPress={this._onTogglePlay}>
+            <Image
+              source={{uri}}
+              style={styles.portraitPodcastImage}
+            />
+          </TouchableHighlight>
         </View>
         <View style={styles.portraitInfoContainer}>
           <Text style={styles.portraitPodcastDate} numberOfLines={1}>
@@ -134,12 +155,15 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.landscapeMainContainer}>
+        {this.renderAudioComponent(podcast)}
         <View style={styles.landscapeCompContainer}>
           <View style={styles.landscapeImageContainer}>
-            <Image
-              source={{uri}}
-              style={styles.landscapePodcastImage}
-            />
+            <TouchableHighlight onPress={this._onTogglePlay}>
+              <Image
+                source={{uri}}
+                style={styles.landscapePodcastImage}
+              />
+            </TouchableHighlight>
           </View>
           <View style={styles.landscapeInfoContainer}>
             <Text style={styles.landscapePodcastDate} numberOfLines={1}>
@@ -166,6 +190,69 @@ class PodcastScreen extends React.Component {
         </View>
       </View>
     );
+  }
+
+  _onTogglePlay() {
+    this.setState((prevState) => {
+      prevState.audioControls.paused = !prevState.audioControls.paused;
+      return prevState;
+    });
+  }
+
+  renderAudioComponent(podcast: Object) {
+    var pausedBool = this.state.audioControls.paused;
+    var pausedInt = pausedBool ? 0 : 1;
+    return (
+      <Video source={{uri: podcast.audio_url}} // Can be a URL or a local file.
+       rate={pausedInt}                   // 0 is paused, 1 is normal.
+       volume={1}                 // 0 is muted, 1 is normal.
+       muted={false}                // Mutes the audio entirely.
+       paused={pausedBool}               // Pauses playback entirely.
+       resizeMode="cover"           // Fill the whole screen at aspect ratio.
+       repeat={false}                // Repeat forever.
+       onLoadStart={this.audioOnLoadStart} // Callback when video starts to load
+       onLoad={this.audioOnLoad}    // Callback when video loads
+       onProgress={this.audioOnProgress}    // Callback every ~250ms with currentTime
+       onEnd={this.audioOnEnd}           // Callback when playback finishes
+       onError={this.audioOnError}    // Callback when video cannot be loaded
+       style={styles.audioComponent} />
+    )
+  }
+
+  audioOnLoadStart() {
+    this.setState((prevState) => {
+      prevState.audioData.loading = true;
+      prevState.audioData.haveError = false;
+      return prevState;
+    });
+  }
+
+  audioOnLoad(data) {
+    this.setState((prevState) => {
+      prevState.audioData.loading = false;
+      prevState.audioData.duration = data.duration;
+      return prevState;
+    });
+  }
+
+  audioOnProgress(data) {
+    this.setState((prevState) => {
+      prevState.audioData.currentTime = data.currentTime;
+      return prevState;
+    });
+  }
+
+  audioOnEnd() {
+    console.log('Done');
+  }
+
+  audioOnError(e) {
+    this.setState((prevState) => {
+      prevState.audioData.loading = false;
+      prevState.audioData.haveError = true;
+      return prevState;
+    });
+    console.log('Some error');
   }
 
 }
@@ -259,6 +346,9 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#dddddd",
   },
+  audioComponent: {
+
+  }
 });
 
 

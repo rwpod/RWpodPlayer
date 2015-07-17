@@ -128,7 +128,7 @@ class PodcastScreen extends React.Component {
             {podcast.human_date}
             {' '}&bull;{' '}
             <Text style={styles.portraitPodcastDuration}>
-              Duration {podcast.audio_duration}
+              Duration {this.state.audioData.currentTime}/{podcast.audio_duration}
             </Text>
           </Text>
         </View>
@@ -170,7 +170,7 @@ class PodcastScreen extends React.Component {
               {podcast.human_date}
               {' '}&bull;{' '}
               <Text style={styles.landscapePodcastDuration}>
-                Duration {podcast.audio_duration}
+                Duration {this.state.audioData.currentTime}/{podcast.audio_duration}
               </Text>
             </Text>
           </View>
@@ -237,7 +237,7 @@ class PodcastScreen extends React.Component {
 
   audioOnProgress(data) {
     this.setState((prevState) => {
-      prevState.audioData.currentTime = data.currentTime;
+      prevState.audioData.currentTime = parseInt(data.currentTime, 10);
       return prevState;
     });
   }
@@ -252,7 +252,6 @@ class PodcastScreen extends React.Component {
       prevState.audioData.haveError = true;
       return prevState;
     });
-    console.log('Some error');
   }
 
 }

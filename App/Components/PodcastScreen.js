@@ -16,6 +16,7 @@ var {
 } = React;
 var Viewport = require('react-native-viewport');
 var Video = require('react-native-video');
+var AudioPlayer = require('../Lib/AudioPlayer');
 
 class PodcastScreen extends React.Component {
 
@@ -62,6 +63,7 @@ class PodcastScreen extends React.Component {
 
   componentDidMount() {
     Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
+    AudioPlayer.play(this.props.podcast.audio_mirror_url);
   }
 
   componentWillUnmount() {

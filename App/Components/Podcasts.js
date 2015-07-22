@@ -19,7 +19,6 @@ var PodcastScreen = require("./PodcastScreen");
 var Api = require("../Utils/Api");
 
 
-
 class Podcasts extends React.Component {
   static propTypes: {
     emitter: React.PropTypes.object.idRequired
@@ -130,7 +129,7 @@ class Podcasts extends React.Component {
           renderRow={this._renderRow}
           onEndReached={this._onEndReached}
           automaticallyAdjustContentInsets={false}
-          keyboardDismissMode="onDrag"
+          keyboardDismissMode="on-drag"
           keyboardShouldPersistTaps={true}
           showsVerticalScrollIndicator={false}
         />

@@ -8,8 +8,8 @@
  */
 
 #import "AppDelegate.h"
-
 #import "RCTRootView.h"
+#import "RWpodPlayer-Swift.h"
 
 @implementation AppDelegate
 
@@ -45,12 +45,13 @@
 
 //   jsCodeLocation = [[NSBundle mainBundle] URLForResource:@"main" withExtension:@"jsbundle"];
 
+  
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"RWpodPlayer"
                                                    launchOptions:launchOptions];
-
+  
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UIViewController *rootViewController = [[UIViewController alloc] init];
+  RootViewController *rootViewController = [[RootViewController alloc] init];
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];

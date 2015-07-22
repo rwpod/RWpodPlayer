@@ -6,8 +6,9 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "react-native": "^0.4.4",
+    "react-native": "^0.6.0",
     "react-native-video": "^0.4.11",
-    "react-native-viewport": "0.0.2"
+    "react-native-viewport": "^0.0.2",
+    "react-tween-state": "^0.0.5"
   }
 }

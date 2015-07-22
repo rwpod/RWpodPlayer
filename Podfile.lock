@@ -1,0 +1,19 @@
+PODS:
+  - StreamingKit (0.1.25)
+
+DEPENDENCIES:
+  - StreamingKit (from `https://github.com/tumtumtum/StreamingKit.git`)
+
+EXTERNAL SOURCES:
+  StreamingKit:
+    :git: https://github.com/tumtumtum/StreamingKit.git
+
+CHECKOUT OPTIONS:
+  StreamingKit:
+    :commit: 39f0d8bdfe571ae56a612c045e1f0ee12a1d8083
+    :git: https://github.com/tumtumtum/StreamingKit.git
+
+SPEC CHECKSUMS:
+  StreamingKit: f00c054cfd0f59d88c8be7a2270e208302ce48c4
+
+COCOAPODS: 0.38.0

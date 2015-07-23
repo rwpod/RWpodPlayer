@@ -20,7 +20,7 @@
 {
   self = [super init];
   if (self) {
-    self.audioPlayer = [[STKAudioPlayer alloc] initWithOptions:(STKAudioPlayerOptions){ .readBufferSize = 200 }];
+    self.audioPlayer = [[STKAudioPlayer alloc] initWithOptions:(STKAudioPlayerOptions){ .readBufferSize = 64 * 1024 }];
     [self.audioPlayer setDelegate:self];
     [self setSharedAudioSessionCategory];
     [self registerAudioInterruptionNotifications];
@@ -271,7 +271,7 @@ RCT_EXPORT_METHOD(getStatus: (RCTResponseSenderBlock) callback)
   MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
   [commandCenter.playCommand addTarget:self action:@selector(didReceivePlayCommand:)];
   [commandCenter.pauseCommand addTarget:self action:@selector(didReceivePauseCommand:)];
-  commandCenter.stopCommand.enabled = NO;
+  [commandCenter.stopCommand addTarget:self action:@selector(didReceiveStopCommand:)];
   commandCenter.nextTrackCommand.enabled = NO;
   commandCenter.previousTrackCommand.enabled = NO;
 }
@@ -284,6 +284,11 @@ RCT_EXPORT_METHOD(getStatus: (RCTResponseSenderBlock) callback)
 - (void)didReceivePauseCommand:(MPRemoteCommand *)event
 {
   [self pause];
+}
+
+- (void)didReceiveStopCommand:(MPRemoteCommand *)event
+{
+  [self stop];
 }
 
 - (void)unregisterRemoteControlEvents

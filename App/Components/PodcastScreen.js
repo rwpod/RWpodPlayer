@@ -12,10 +12,10 @@ var {
   View,
   WebView,
   ScrollView,
-  StyleSheet
+  StyleSheet,
+  DeviceEventEmitter
 } = React;
 var Viewport = require('react-native-viewport');
-var Video = require('react-native-video');
 var AudioPlayer = require('../Lib/AudioPlayer');
 
 class PodcastScreen extends React.Component {
@@ -35,24 +35,13 @@ class PodcastScreen extends React.Component {
     this._renderLandscape = this._renderLandscape.bind(this);
     this._improveHTML = this._improveHTML.bind(this);
     /* audio binds */
-    this.renderAudioComponent = this.renderAudioComponent.bind(this);
-    this.audioOnLoadStart = this.audioOnLoadStart.bind(this);
-    this.audioOnLoad = this.audioOnLoad.bind(this);
-    this.audioOnProgress = this.audioOnProgress.bind(this);
-    this.audioOnEnd = this.audioOnEnd.bind(this);
-    this.audioOnError = this.audioOnError.bind(this);
+    this._audioChangeState = this._audioChangeState.bind(this);
     this._onTogglePlay = this._onTogglePlay.bind(this);
     /* state */
     this.state = {
       deviseOrientation: "portrait",
-      audioControls: {
-        paused: true
-      },
       audioData: {
-        loading: false,
-        haveError: false,
-        duration: 0.0,
-        currentTime: 0.0
+        status: "STOPPED"
       }
     }
   }
@@ -63,11 +52,23 @@ class PodcastScreen extends React.Component {
 
   componentDidMount() {
     Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
-    AudioPlayer.play(this.props.podcast.audio_mirror_url);
+    /* audio */
+    this.subscription = DeviceEventEmitter.addListener('AudioBridgeEvent', this._audioChangeState);
+    AudioPlayer.getStatus((error, status) => {
+      error ? console.log(error) : this._audioChangeState(status)
+    });
   }
 
   componentWillUnmount() {
     Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
+    this.subscription.remove();
+  }
+
+  _audioChangeState(status) {
+    this.setState((prevState) => {
+      prevState.audioData = status;
+      return prevState;
+    });
   }
 
   _improveHTML() {
@@ -75,7 +76,7 @@ class PodcastScreen extends React.Component {
   }
 
   _firedChangedOrientation(dimensions: Object) {
-    // dimensions is invalid
+    // dimensions is invalid, need get it fron callback
     Viewport.getDimensions(this._changedOrientation);
   }
 
@@ -116,7 +117,6 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.portraitMainContainer}>
-        {this.renderAudioComponent(podcast)}
         <View style={styles.portraitImageContainer}>
           <TouchableHighlight onPress={this._onTogglePlay}>
             <Image
@@ -130,7 +130,7 @@ class PodcastScreen extends React.Component {
             {podcast.human_date}
             {' '}&bull;{' '}
             <Text style={styles.portraitPodcastDuration}>
-              Duration {this.state.audioData.currentTime}/{podcast.audio_duration}
+              Duration {podcast.audio_duration}/{this.state.audioData.status}
             </Text>
           </Text>
         </View>
@@ -157,7 +157,6 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.landscapeMainContainer}>
-        {this.renderAudioComponent(podcast)}
         <View style={styles.landscapeCompContainer}>
           <View style={styles.landscapeImageContainer}>
             <TouchableHighlight onPress={this._onTogglePlay}>
@@ -172,7 +171,7 @@ class PodcastScreen extends React.Component {
               {podcast.human_date}
               {' '}&bull;{' '}
               <Text style={styles.landscapePodcastDuration}>
-                Duration {this.state.audioData.currentTime}/{podcast.audio_duration}
+                Duration {podcast.audio_duration}/{this.state.audioData.status}
               </Text>
             </Text>
           </View>
@@ -195,65 +194,19 @@ class PodcastScreen extends React.Component {
   }
 
   _onTogglePlay() {
-    this.setState((prevState) => {
-      prevState.audioControls.paused = !prevState.audioControls.paused;
-      return prevState;
-    });
-  }
-
-  renderAudioComponent(podcast: Object) {
-    var pausedBool = this.state.audioControls.paused;
-    var pausedInt = pausedBool ? 0 : 1;
-    return (
-      <Video source={{uri: podcast.audio_url}} // Can be a URL or a local file.
-       rate={pausedInt}                   // 0 is paused, 1 is normal.
-       volume={1}                 // 0 is muted, 1 is normal.
-       muted={false}                // Mutes the audio entirely.
-       paused={pausedBool}               // Pauses playback entirely.
-       resizeMode="cover"           // Fill the whole screen at aspect ratio.
-       repeat={false}                // Repeat forever.
-       onLoadStart={this.audioOnLoadStart} // Callback when video starts to load
-       onLoad={this.audioOnLoad}    // Callback when video loads
-       onProgress={this.audioOnProgress}    // Callback every ~250ms with currentTime
-       onEnd={this.audioOnEnd}           // Callback when playback finishes
-       onError={this.audioOnError}    // Callback when video cannot be loaded
-       style={styles.audioComponent} />
-    )
-  }
-
-  audioOnLoadStart() {
-    this.setState((prevState) => {
-      prevState.audioData.loading = true;
-      prevState.audioData.haveError = false;
-      return prevState;
-    });
-  }
-
-  audioOnLoad(data) {
-    this.setState((prevState) => {
-      prevState.audioData.loading = false;
-      prevState.audioData.duration = data.duration;
-      return prevState;
-    });
-  }
-
-  audioOnProgress(data) {
-    this.setState((prevState) => {
-      prevState.audioData.currentTime = parseInt(data.currentTime, 10);
-      return prevState;
-    });
-  }
-
-  audioOnEnd() {
-    console.log('Done');
-  }
-
-  audioOnError(e) {
-    this.setState((prevState) => {
-      prevState.audioData.loading = false;
-      prevState.audioData.haveError = true;
-      return prevState;
-    });
+    switch(this.state.audioData.status){
+      case "STOPPED":
+        AudioPlayer.play(this.props.podcast.audio_url);
+        break;
+      case "PLAYING":
+        AudioPlayer.pause();
+        break;
+      case "PAUSED":
+        AudioPlayer.resume();
+        break;
+      default:
+        AudioPlayer.stop();
+    }
   }
 
 }
@@ -346,9 +299,6 @@ var styles = StyleSheet.create({
   landscapeWebView: {
     flex: 1,
     backgroundColor: "#dddddd",
-  },
-  audioComponent: {
-
   }
 });
 

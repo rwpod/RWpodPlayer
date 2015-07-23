@@ -53,7 +53,7 @@ class PodcastScreen extends React.Component {
   componentDidMount() {
     Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
     /* audio */
-    this.subscription = DeviceEventEmitter.addListener('AudioBridgeEvent', this._audioChangeState);
+    this.audioSubscription = DeviceEventEmitter.addListener('AudioBridgeEvent', this._audioChangeState);
     AudioPlayer.getStatus((error, status) => {
       error ? console.log(error) : this._audioChangeState(status)
     });
@@ -61,7 +61,7 @@ class PodcastScreen extends React.Component {
 
   componentWillUnmount() {
     Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
-    this.subscription.remove();
+    this.audioSubscription.remove();
   }
 
   _audioChangeState(status) {
@@ -75,8 +75,7 @@ class PodcastScreen extends React.Component {
   }
 
   _firedChangedOrientation(dimensions: Object) {
-    // dimensions is invalid, need get it fron callback
-    Viewport.getDimensions(this._changedOrientation);
+    this._changedOrientation(dimensions);
   }
 
   _changedOrientation(dimensions: Object) {
@@ -196,6 +195,7 @@ class PodcastScreen extends React.Component {
     switch(this.state.audioData.status){
       case "STOPPED":
         AudioPlayer.play(this.props.podcast.audio_url);
+        AudioPlayer.setPlayingInfo(this.props.podcast.title, "", "RWpod");
         break;
       case "PLAYING":
         AudioPlayer.pause();

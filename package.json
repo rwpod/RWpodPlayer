@@ -6,7 +6,10 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
+    "react": "^0.13.3",
     "react-native": "^0.6.0",
-    "react-native-viewport": "^0.0.2"
+    "react-native-overlay": "^0.2.8",
+    "react-native-viewport": "^0.0.2",
+    "reflux": "^0.2.11"
   }
 }

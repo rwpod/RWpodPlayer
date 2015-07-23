@@ -28,6 +28,7 @@
 		B335CE911B604212004D5310 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B335CE8D1B604212004D5310 /* AppDelegate.m */; };
 		B335CE921B604212004D5310 /* AudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B335CE8F1B604212004D5310 /* AudioManager.m */; };
 		B335CE931B604212004D5310 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B335CE901B604212004D5310 /* RootViewController.swift */; };
+		B3F466651B611675001F1878 /* libRNOverlay.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B3F466631B61166A001F1878 /* libRNOverlay.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -122,6 +123,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = Viewport;
 		};
+		B3F466621B61166A001F1878 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B3F466531B61166A001F1878 /* RNOverlay.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNOverlay;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -155,6 +163,7 @@
 		B335CE8E1B604212004D5310 /* AudioManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioManager.h; sourceTree = "<group>"; };
 		B335CE8F1B604212004D5310 /* AudioManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioManager.m; sourceTree = "<group>"; };
 		B335CE901B604212004D5310 /* RootViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		B3F466531B61166A001F1878 /* RNOverlay.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNOverlay.xcodeproj; path = "node_modules/react-native-overlay/RNOverlay.xcodeproj"; sourceTree = "<group>"; };
 		EA6B4B7D147D8AF641DB6E30 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -170,6 +179,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3F466651B611675001F1878 /* libRNOverlay.a in Frameworks */,
 				B321E0531B1C5CA700E43C54 /* libViewport.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -312,6 +322,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				B3F466531B61166A001F1878 /* RNOverlay.xcodeproj */,
 				B321E0421B1C5C9A00E43C54 /* Viewport.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -387,6 +398,14 @@
 			);
 			name = Classes;
 			path = iOS/Classes;
+			sourceTree = "<group>";
+		};
+		B3F466541B61166A001F1878 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B3F466631B61166A001F1878 /* libRNOverlay.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -509,6 +528,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = B3F466541B61166A001F1878 /* Products */;
+					ProjectRef = B3F466531B61166A001F1878 /* RNOverlay.xcodeproj */;
+				},
+				{
 					ProductGroup = B321E0431B1C5C9A00E43C54 /* Products */;
 					ProjectRef = B321E0421B1C5C9A00E43C54 /* Viewport.xcodeproj */;
 				},
@@ -604,6 +627,13 @@
 			fileType = archive.ar;
 			path = libViewport.a;
 			remoteRef = B321E0511B1C5C9A00E43C54 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		B3F466631B61166A001F1878 /* libRNOverlay.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNOverlay.a;
+			remoteRef = B3F466621B61166A001F1878 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

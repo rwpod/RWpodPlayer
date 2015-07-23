@@ -16,5 +16,10 @@
 
 - (void)play:(NSString *) uri;
 - (void)pause;
+- (void)resume;
+- (void)stop;
+- (void)getStatus:(RCTResponseSenderBlock) callback;
+- (void)setPlayingInfo:(NSString *)title album:(NSString *)album artist:(NSString *)artist;
+
 
 @end

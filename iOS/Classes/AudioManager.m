@@ -43,7 +43,7 @@
 
 RCT_EXPORT_MODULE();
 
-RCT_EXPORT_METHOD(play:(NSString *) uri)
+RCT_EXPORT_METHOD(play:(NSString *)uri)
 {
   if (!self.audioPlayer) {
     return;
@@ -82,7 +82,7 @@ RCT_EXPORT_METHOD(stop)
   }
 }
 
-RCT_EXPORT_METHOD(getStatus: (RCTResponseSenderBlock) callback)
+RCT_EXPORT_METHOD(getStatus:(RCTResponseSenderBlock) callback)
 {
   if (!self.audioPlayer) {
     callback(@[[NSNull null], @{@"status": @"ERROR"}]);
@@ -93,6 +93,13 @@ RCT_EXPORT_METHOD(getStatus: (RCTResponseSenderBlock) callback)
   } else {
     callback(@[[NSNull null], @{@"status": @"STOPPED"}]);
   }
+}
+
+RCT_EXPORT_METHOD(setPlayingInfo:(NSString *)title album:(NSString *)album artist:(NSString *)artist)
+{
+  MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc]initWithImage:[UIImage imageNamed:@"RWpodLogo"]];
+  NSDictionary *nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, MPMediaItemPropertyAlbumTitle, album, MPMediaItemPropertyAlbumArtist, artist, MPMediaItemPropertyTitle, artwork, MPMediaItemPropertyArtwork, nil];
+  [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
 }
 
 
@@ -301,7 +308,7 @@ RCT_EXPORT_METHOD(getStatus: (RCTResponseSenderBlock) callback)
 - (void)setNowPlayingInfo
 {
   MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc]initWithImage:[UIImage imageNamed:@"RWpodLogo"]];
-  NSDictionary *nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"RWpod", MPMediaItemPropertyAlbumTitle, @"", MPMediaItemPropertyAlbumArtist, @"Podcast", MPMediaItemPropertyTitle, artwork, MPMediaItemPropertyArtwork, nil];
+  NSDictionary *nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"RWpod Podcast", MPMediaItemPropertyAlbumTitle, @"", MPMediaItemPropertyAlbumArtist, @"", MPMediaItemPropertyTitle, artwork, MPMediaItemPropertyArtwork, nil];
   [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
 }
 

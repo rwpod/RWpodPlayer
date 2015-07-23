@@ -50,7 +50,9 @@ class AudioPlayer {
       return AudioManager.getStatus(callback);
     }
   }
-
+  static setPlayingInfo(title: string, albom: string, artist: string) {
+    AudioManager.setPlayingInfo(title, albom, artist);
+  }
 }
 
 module.exports = AudioPlayer;

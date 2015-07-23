@@ -51,9 +51,12 @@ class Podcasts extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentWillMount() {
     /* mixin */
     Subscribable.Mixin.componentWillMount();
+  }
+
+  componentDidMount() {
     /* get podcasts */
     if (0 === this.state.podcasts.length) {
       this.loadPodcasts();

@@ -12,11 +12,11 @@ var {
   View,
   WebView,
   ScrollView,
-  StyleSheet,
-  DeviceEventEmitter
+  StyleSheet
 } = React;
 var Viewport = require('react-native-viewport');
 var AudioPlayer = require('../Lib/AudioPlayer');
+var AudioSubscriber = require('../Utils/AudioSubscriber')
 
 class PodcastScreen extends React.Component {
 
@@ -53,15 +53,12 @@ class PodcastScreen extends React.Component {
   componentDidMount() {
     Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
     /* audio */
-    this.audioSubscription = DeviceEventEmitter.addListener('AudioBridgeEvent', this._audioChangeState);
-    AudioPlayer.getStatus((error, status) => {
-      error ? console.log(error) : this._audioChangeState(status)
-    });
+    this.audioSubscriber = new AudioSubscriber(this._audioChangeState);
   }
 
   componentWillUnmount() {
     Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
-    this.audioSubscription.remove();
+    this.audioSubscriber.remove();
   }
 
   _audioChangeState(status) {

@@ -20,7 +20,7 @@
 {
   self = [super init];
   if (self) {
-    self.audioPlayer = [[STKAudioPlayer alloc] initWithOptions:(STKAudioPlayerOptions){ .readBufferSize = 64 * 1024 }];
+    self.audioPlayer = [[STKAudioPlayer alloc] initWithOptions:(STKAudioPlayerOptions){ .flushQueueOnSeek = YES, .readBufferSize = 64 * 1024 }];
     [self.audioPlayer setDelegate:self];
     [self setSharedAudioSessionCategory];
     [self registerAudioInterruptionNotifications];

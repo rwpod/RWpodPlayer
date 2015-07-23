@@ -65,9 +65,8 @@ class PodcastScreen extends React.Component {
   }
 
   _audioChangeState(status) {
-    this.setState((prevState) => {
-      prevState.audioData = status;
-      return prevState;
+    this.setState({
+      audioData: status
     });
   }
 

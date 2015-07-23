@@ -72,7 +72,7 @@ class PodcastScreen extends React.Component {
   }
 
   _firedChangedOrientation(dimensions: Object) {
-    this._changedOrientation(dimensions);
+    Viewport.getDimensions(this._changedOrientation); // args is invalid
   }
 
   _changedOrientation(dimensions: Object) {

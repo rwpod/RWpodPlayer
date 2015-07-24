@@ -16,7 +16,9 @@ var {
 } = React;
 var Viewport = require('react-native-viewport');
 var AudioPlayer = require('../Lib/AudioPlayer');
-var AudioSubscriber = require('../Utils/AudioSubscriber')
+var RwpodSlider = require('../Lib/RwpodSlider');
+var AudioSubscriber = require('../Utils/AudioSubscriber');
+
 
 class PodcastScreen extends React.Component {
 
@@ -112,6 +114,12 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.portraitMainContainer}>
+        <RwpodSlider style={styles.portraitSeekSlider}
+                     value={50}
+                     minimumValue={0}
+                     maximumValue={100}
+                     onValueChange={(val) => console.log('RwpodSlider onValueChange', val) }
+                     onSlidingComplete={(val) => console.log('RwpodSlider onSlidingComplete', val) } />
         <View style={styles.portraitImageContainer}>
           <TouchableHighlight onPress={this._onTogglePlay}>
             <Image
@@ -250,6 +258,10 @@ var styles = StyleSheet.create({
   portraitWebView: {
     flex: 1,
     backgroundColor: "#dddddd",
+  },
+  portraitSeekSlider: {
+    height: 10,
+    margin: 10,
   },
 
 

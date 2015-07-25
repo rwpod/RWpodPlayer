@@ -11,14 +11,14 @@ var {
 var AudioPlayer = require('../Lib/AudioPlayer');
 
 class AudioSubscriber {
-  constructor(callbackFunc){
-    this.initSubscriber(callbackFunc);
+  constructor(stateFunc){
+    this.initSubscribers(stateFunc);
   }
 
-  initSubscriber(callbackFunc) {
-    this.audioSubscription = DeviceEventEmitter.addListener('AudioBridgeEvent', callbackFunc);
+  initSubscribers(stateFunc) {
+    this.audioSubscription = DeviceEventEmitter.addListener('AudioBridgeEvent', stateFunc);
     AudioPlayer.getStatus((error, status) => {
-      error ? console.log('AudioSubscriber error', error) : callbackFunc(status)
+      error ? console.log('AudioSubscriber AudioBridgeEvent', error) : stateFunc(status)
     });
   }
 

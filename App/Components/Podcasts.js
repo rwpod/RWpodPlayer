@@ -241,7 +241,8 @@ var styles = StyleSheet.create({
   loader: {
     alignItems: "center",
     justifyContent: "center",
-    height: 100
+    alignSelf: "center",
+    height: 200
   },
   retryButton: {
     height: 45,

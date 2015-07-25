@@ -60,6 +60,7 @@ class PodcastScreen extends React.Component {
 
   componentWillUnmount() {
     Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
+    /* audio */
     this.audioSubscriber.remove();
   }
 
@@ -260,7 +261,7 @@ var styles = StyleSheet.create({
     backgroundColor: "#dddddd",
   },
   portraitSeekSlider: {
-    height: 10,
+    height: 25,
     margin: 10,
   },
 

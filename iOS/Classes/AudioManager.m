@@ -95,6 +95,23 @@ RCT_EXPORT_METHOD(getStatus:(RCTResponseSenderBlock) callback)
   }
 }
 
+RCT_EXPORT_METHOD(getSeekStatus:(RCTResponseSenderBlock) callback)
+{
+  if (!self.audioPlayer) {
+    callback(@[[NSNull null], @{@"duration": @0, @"position": @0}]);
+  } else if ([self.audioPlayer state] == STKAudioPlayerStatePlaying) {
+    if (self.audioPlayer.duration != 0) {
+      callback(@[[NSNull null], @{@"duration": [NSNumber numberWithDouble:self.audioPlayer.duration], @"position": [NSNumber numberWithDouble:self.audioPlayer.progress]}]);
+    } else {
+      callback(@[[NSNull null], @{@"duration": @0, @"position": @0}]);
+    }
+  } else if ([self.audioPlayer state] == STKAudioPlayerStateBuffering) {
+    callback(@[[NSNull null], @{@"duration": @0, @"position": @0}]);
+  } else {
+    callback(@[[NSNull null], @{@"duration": @0, @"position": @0}]);
+  }
+}
+
 RCT_EXPORT_METHOD(setPlayingInfo:(NSString *)title album:(NSString *)album artist:(NSString *)artist)
 {
   MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc]initWithImage:[UIImage imageNamed:@"RWpodLogo"]];

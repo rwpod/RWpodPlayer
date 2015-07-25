@@ -20,6 +20,7 @@ RCT_EXPORT_MODULE()
 - (UIView *)view
 {
   RwpodSlider *slider = [[RwpodSlider alloc] init];
+  slider.continuous = YES;
   [slider addTarget:self action:@selector(sliderValueChanged:) forControlEvents:UIControlEventValueChanged];
   [slider addTarget:self action:@selector(sliderTouchEnd:) forControlEvents:UIControlEventTouchUpInside];
   [slider addTarget:self action:@selector(sliderTouchEnd:) forControlEvents:UIControlEventTouchUpOutside];

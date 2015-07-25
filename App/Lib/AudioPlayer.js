@@ -50,6 +50,11 @@ class AudioPlayer {
       return AudioManager.getStatus(callback);
     }
   }
+  static getSeekStatus(callback) {
+    if (callback && 'function' === typeof callback) {
+      return AudioManager.getSeekStatus(callback);
+    }
+  }
   static setPlayingInfo(title: string, albom: string, artist: string) {
     AudioManager.setPlayingInfo(title, albom, artist);
   }

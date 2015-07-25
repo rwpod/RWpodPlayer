@@ -39,11 +39,16 @@ class PodcastScreen extends React.Component {
     /* audio binds */
     this._audioChangeState = this._audioChangeState.bind(this);
     this._onTogglePlay = this._onTogglePlay.bind(this);
+    this._seekTimerCallback = this._seekTimerCallback.bind(this);
     /* state */
     this.state = {
       deviseOrientation: "portrait",
       audioData: {
         status: "STOPPED"
+      },
+      audioSeek: {
+        duration: 0,
+        position: 0
       }
     }
   }
@@ -56,12 +61,17 @@ class PodcastScreen extends React.Component {
     Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
     /* audio */
     this.audioSubscriber = new AudioSubscriber(this._audioChangeState);
+    /* seek timer */
+    this.seekTimer = setInterval(this._seekTimerCallback, 500);
+    this._seekTimerCallback();
   }
 
   componentWillUnmount() {
     Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
     /* audio */
     this.audioSubscriber.remove();
+    /* seek timer */
+    clearInterval(this.seekTimer);
   }
 
   _audioChangeState(status) {
@@ -116,9 +126,9 @@ class PodcastScreen extends React.Component {
     return (
       <View style={styles.portraitMainContainer}>
         <RwpodSlider style={styles.portraitSeekSlider}
-                     value={50}
+                     value={this.state.audioSeek.position}
                      minimumValue={0}
-                     maximumValue={100}
+                     maximumValue={this.state.audioSeek.duration}
                      onValueChange={(val) => console.log('RwpodSlider onValueChange', val) }
                      onSlidingComplete={(val) => console.log('RwpodSlider onSlidingComplete', val) } />
         <View style={styles.portraitImageContainer}>
@@ -211,6 +221,20 @@ class PodcastScreen extends React.Component {
         break;
       default:
         AudioPlayer.stop();
+    }
+  }
+
+  _seekTimerCallback() {
+    if ("PLAYING" === this.state.audioData.status) {
+      AudioPlayer.getSeekStatus((error, seekData) => {
+        if (error) {
+          console.log('PodcastScreen seekTimerCallback', error)
+        } else {
+          this.setState({
+            audioSeek: seekData
+          });
+        }
+      });
     }
   }
 

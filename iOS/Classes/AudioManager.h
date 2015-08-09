@@ -18,6 +18,7 @@
 - (void)pause;
 - (void)resume;
 - (void)stop;
+- (void)seek:(double)position;
 - (void)getStatus:(RCTResponseSenderBlock) callback;
 - (void)getSeekStatus:(RCTResponseSenderBlock) callback;
 - (void)setPlayingInfo:(NSString *)title album:(NSString *)album artist:(NSString *)artist;

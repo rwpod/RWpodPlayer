@@ -45,15 +45,14 @@ class AudioPlayer {
   static resume() {
     AudioManager.resume();
   }
-  static getStatus(callback) {
-    if (callback && 'function' === typeof callback) {
-      return AudioManager.getStatus(callback);
-    }
+  static seek(position: number) {
+    AudioManager.seek(position);
   }
-  static getSeekStatus(callback) {
-    if (callback && 'function' === typeof callback) {
-      return AudioManager.getSeekStatus(callback);
-    }
+  static getStatus(callback: Function) {
+    return AudioManager.getStatus(callback);
+  }
+  static getSeekStatus(callback: Function) {
+    return AudioManager.getSeekStatus(callback);
   }
   static setPlayingInfo(title: string, albom: string, artist: string) {
     AudioManager.setPlayingInfo(title, albom, artist);

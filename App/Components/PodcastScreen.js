@@ -11,13 +11,12 @@ var {
   TouchableHighlight,
   View,
   WebView,
-  SliderIOS,
   StyleSheet
 } = React;
 var Slider = require('react-native-slider');
 var AudioPlayer = require('../Lib/AudioPlayer');
+var AudioSubscriber = require('../Lib/AudioSubscriber');
 var Viewport = require('../Lib/Viewport');
-var AudioSubscriber = require('../Utils/AudioSubscriber');
 
 
 class PodcastScreen extends React.Component {
@@ -35,6 +34,9 @@ class PodcastScreen extends React.Component {
     this._renderPortrait = this._renderPortrait.bind(this);
     this._renderLandscape = this._renderLandscape.bind(this);
     this._improveHTML = this._improveHTML.bind(this);
+    /* slider */
+    this._sliderOnValueChange = this._sliderOnValueChange.bind(this);
+    this._sliderOnSlidingComplete = this._sliderOnSlidingComplete.bind(this);
     /* audio binds */
     this._audioChangeState = this._audioChangeState.bind(this);
     this._onTogglePlay = this._onTogglePlay.bind(this);
@@ -42,6 +44,7 @@ class PodcastScreen extends React.Component {
     /* state */
     this.state = {
       deviseOrientation: "portrait",
+      isAudioSeeking: false,
       audioData: {
         status: "STOPPED"
       },
@@ -52,13 +55,8 @@ class PodcastScreen extends React.Component {
     }
   }
 
-  componentWillMount() {
-    Viewport.getDimensions(this._changedOrientation);
-  }
-
   componentDidMount() {
-    this.viewportSubscriber = Viewport.subscribe(this._changedOrientation);
-    /* audio */
+    this.viewportSubscriber = new Viewport(this._changedOrientation);
     this.audioSubscriber = new AudioSubscriber(this._audioChangeState);
     /* seek timer */
     this.seekTimer = setInterval(this._seekTimerCallback, 500);
@@ -66,8 +64,7 @@ class PodcastScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    Viewport.unsubscribe(this.viewportSubscriber);
-    /* audio */
+    this.viewportSubscriber.remove();
     this.audioSubscriber.remove();
     /* seek timer */
     clearInterval(this.seekTimer);
@@ -126,8 +123,8 @@ class PodcastScreen extends React.Component {
                  value={this.state.audioSeek.position}
                  minimumValue={0}
                  maximumValue={this.state.audioSeek.duration}
-                 onValueChange={(val) => console.log('RwpodSlider onValueChange', val) }
-                 onSlidingComplete={(val) => console.log('RwpodSlider onSlidingComplete', val) } />
+                 onValueChange={this._sliderOnValueChange}
+                 onSlidingComplete={this._sliderOnSlidingComplete} />
         <View style={styles.portraitImageContainer}>
           <TouchableHighlight onPress={this._onTogglePlay}>
             <Image
@@ -141,7 +138,7 @@ class PodcastScreen extends React.Component {
             {podcast.human_date}
             {' '}&bull;{' '}
             <Text style={styles.portraitPodcastDuration}>
-              Duration {podcast.audio_duration}/{this.state.audioData.status}
+              Duration {podcast.audio_duration}/{this.state.audioData.status}/{this.state.audioSeek.position}
             </Text>
           </Text>
         </View>
@@ -222,11 +219,11 @@ class PodcastScreen extends React.Component {
   }
 
   _seekTimerCallback() {
-    if ("PLAYING" === this.state.audioData.status) {
+    if ("PLAYING" === this.state.audioData.status && !this.state.isAudioSeeking) {
       AudioPlayer.getSeekStatus((error, seekData) => {
         if (error) {
           console.log('PodcastScreen seekTimerCallback', error)
-        } else {
+        } else if (!this.state.isAudioSeeking) {
           this.setState({
             audioSeek: seekData
           });
@@ -235,6 +232,24 @@ class PodcastScreen extends React.Component {
     }
   }
 
+  _sliderOnValueChange(value) {
+    this.setState((prevState) => {
+      prevState.isAudioSeeking = true;
+      prevState.audioSeek.position = value;
+      return prevState;
+    });
+    return value;
+  }
+
+  _sliderOnSlidingComplete(value) {
+    AudioPlayer.seek(value);
+    this.setState((prevState) => {
+      prevState.isAudioSeeking = false;
+      prevState.audioSeek.position = value;
+      return prevState;
+    });
+    return value;
+  }
 }
 
 
@@ -283,7 +298,8 @@ var styles = StyleSheet.create({
   },
   portraitSeekSlider: {
     height: 20,
-    margin: 10,
+    marginLeft: 30,
+    marginRight: 30,
   },
   sliderTrack: {
     height: 10,

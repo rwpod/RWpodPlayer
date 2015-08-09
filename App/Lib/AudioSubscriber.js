@@ -11,20 +11,22 @@ var {
 var AudioPlayer = require('../Lib/AudioPlayer');
 
 class AudioSubscriber {
-  constructor(stateFunc){
-    this.initSubscribers(stateFunc);
+
+  constructor(handler: Fulction){
+    this.initSubscriber(handler);
   }
 
-  initSubscribers(stateFunc) {
-    this.audioSubscription = DeviceEventEmitter.addListener('AudioBridgeEvent', stateFunc);
+  initSubscriber(handler: Fulction) {
+    this.audioSubscription = DeviceEventEmitter.addListener('AudioBridgeEvent', handler);
     AudioPlayer.getStatus((error, status) => {
-      error ? console.log('AudioSubscriber AudioBridgeEvent', error) : stateFunc(status)
+      error ? console.log('AudioSubscriber AudioBridgeEvent', error) : handler(status)
     });
   }
 
   remove(){
     this.audioSubscription.remove();
   }
+  
 }
 
 

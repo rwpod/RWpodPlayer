@@ -25,7 +25,6 @@
     [self setSharedAudioSessionCategory];
     [self registerAudioInterruptionNotifications];
     [self registerRemoteControlEvents];
-    [self setNowPlayingInfo];
   }
 
   return self;
@@ -82,6 +81,15 @@ RCT_EXPORT_METHOD(stop)
   }
 }
 
+RCT_EXPORT_METHOD(seek:(double)position)
+{
+  if (!self.audioPlayer) {
+    return;
+  } else {
+    [self.audioPlayer seekToTime:position];
+  }
+}
+
 RCT_EXPORT_METHOD(getStatus:(RCTResponseSenderBlock) callback)
 {
   if (!self.audioPlayer) {
@@ -115,7 +123,7 @@ RCT_EXPORT_METHOD(getSeekStatus:(RCTResponseSenderBlock) callback)
 RCT_EXPORT_METHOD(setPlayingInfo:(NSString *)title album:(NSString *)album artist:(NSString *)artist)
 {
   MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc]initWithImage:[UIImage imageNamed:@"RWpodLogo"]];
-  NSDictionary *nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, MPMediaItemPropertyAlbumTitle, album, MPMediaItemPropertyAlbumArtist, artist, MPMediaItemPropertyTitle, artwork, MPMediaItemPropertyArtwork, nil];
+  NSDictionary *nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, MPMediaItemPropertyAlbumTitle, album, MPMediaItemPropertyAlbumArtist, artist, MPMediaItemPropertyTitle, artwork, MPMediaItemPropertyArtwork, @"Podcast", MPMediaItemPropertyGenre, @(MPMediaTypePodcast), MPMediaItemPropertyMediaType, nil];
   [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
 }
 
@@ -298,6 +306,16 @@ RCT_EXPORT_METHOD(setPlayingInfo:(NSString *)title album:(NSString *)album artis
   [commandCenter.stopCommand addTarget:self action:@selector(didReceiveStopCommand:)];
   commandCenter.nextTrackCommand.enabled = NO;
   commandCenter.previousTrackCommand.enabled = NO;
+  
+  MPSkipIntervalCommand *skipBackwardIntervalCommand = [commandCenter skipBackwardCommand];
+  skipBackwardIntervalCommand.preferredIntervals = @[@(30)];
+  [skipBackwardIntervalCommand setEnabled:YES];
+  [skipBackwardIntervalCommand addTarget:self action:@selector(didReceiveSkipBackwardEvent:)];
+  
+  MPSkipIntervalCommand *skipForwardIntervalCommand = [commandCenter skipForwardCommand];
+  skipForwardIntervalCommand.preferredIntervals = @[@(30)];
+  [skipForwardIntervalCommand setEnabled:YES];
+  [skipForwardIntervalCommand addTarget:self action:@selector(didReceiveSkipForwardEvent:)];
 }
 
 - (void)didReceivePlayCommand:(MPRemoteCommand *)event
@@ -315,18 +333,34 @@ RCT_EXPORT_METHOD(setPlayingInfo:(NSString *)title album:(NSString *)album artis
   [self stop];
 }
 
+- (void)didReceiveSkipBackwardEvent:(MPSkipIntervalCommandEvent *)event
+{
+  double nextSeek = self.audioPlayer.progress - event.interval;
+  if (nextSeek < 0) {
+    nextSeek = 0;
+  }
+  [self seek:nextSeek];
+}
+
+- (void)didReceiveSkipForwardEvent:(MPSkipIntervalCommandEvent *)event
+{
+  double nextSeek = self.audioPlayer.progress + event.interval;
+  if (nextSeek > self.audioPlayer.duration) {
+    nextSeek = self.audioPlayer.duration - 1;
+  }
+  [self seek:nextSeek];
+}
+
 - (void)unregisterRemoteControlEvents
 {
   MPRemoteCommandCenter *commandCenter = [MPRemoteCommandCenter sharedCommandCenter];
   [commandCenter.playCommand removeTarget:self];
   [commandCenter.pauseCommand removeTarget:self];
-}
-
-- (void)setNowPlayingInfo
-{
-  MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc]initWithImage:[UIImage imageNamed:@"RWpodLogo"]];
-  NSDictionary *nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:@"RWpod Podcast", MPMediaItemPropertyAlbumTitle, @"", MPMediaItemPropertyAlbumArtist, @"", MPMediaItemPropertyTitle, artwork, MPMediaItemPropertyArtwork, nil];
-  [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
+  
+  MPSkipIntervalCommand *skipBackwardIntervalCommand = [commandCenter skipBackwardCommand];
+  [skipBackwardIntervalCommand removeTarget:self];
+  MPSkipIntervalCommand *skipForwardIntervalCommand = [commandCenter skipForwardCommand];
+  [skipForwardIntervalCommand removeTarget:self];
 }
 
 @end

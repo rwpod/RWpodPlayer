@@ -15,15 +15,17 @@ var {
 
 class Viewport {
 
-  static subscribe(handler: Function) {
-    return DeviceEventEmitter.addListener(
-      'dimensionsDidChange',
-      handler
-    );
+  constructor(handler: Fulction){
+    this.initSubscriber(handler);
   }
 
-  static unsubscribe(subscriber: object) {
-    subscriber.remove();
+  initSubscriber(handler: Fulction) {
+    this.viewportSubscription = DeviceEventEmitter.addListener('dimensionsDidChange', handler);
+    ViewportManager.getCurrentDimensions(handler);
+  }
+
+  remove(){
+    this.viewportSubscription.remove();
   }
 
   static getDimensions(handler: Function) {

@@ -11,12 +11,12 @@ var {
   TouchableHighlight,
   View,
   WebView,
-  ScrollView,
+  SliderIOS,
   StyleSheet
 } = React;
-var Viewport = require('react-native-viewport');
+var Slider = require('react-native-slider');
 var AudioPlayer = require('../Lib/AudioPlayer');
-var RwpodSlider = require('../Lib/RwpodSlider');
+var Viewport = require('../Lib/Viewport');
 var AudioSubscriber = require('../Utils/AudioSubscriber');
 
 
@@ -31,7 +31,6 @@ class PodcastScreen extends React.Component {
     /* binds */
     this._onNavigationStateChange = this._onNavigationStateChange.bind(this);
     this._changedOrientation = this._changedOrientation.bind(this);
-    this._firedChangedOrientation = this._firedChangedOrientation.bind(this);
     this._isDeviseInPortrait = this._isDeviseInPortrait.bind(this);
     this._renderPortrait = this._renderPortrait.bind(this);
     this._renderLandscape = this._renderLandscape.bind(this);
@@ -58,7 +57,7 @@ class PodcastScreen extends React.Component {
   }
 
   componentDidMount() {
-    Viewport.addEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
+    this.viewportSubscriber = Viewport.subscribe(this._changedOrientation);
     /* audio */
     this.audioSubscriber = new AudioSubscriber(this._audioChangeState);
     /* seek timer */
@@ -67,7 +66,7 @@ class PodcastScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    Viewport.removeEventListener(Viewport.events.DEVICE_DIMENSIONS_EVENT, this._firedChangedOrientation);
+    Viewport.unsubscribe(this.viewportSubscriber);
     /* audio */
     this.audioSubscriber.remove();
     /* seek timer */
@@ -82,10 +81,6 @@ class PodcastScreen extends React.Component {
 
   _improveHTML() {
     return this.props.podcast.description.replace(/<a\s+/g, "<a target=\"_blank\" ");
-  }
-
-  _firedChangedOrientation(dimensions: Object) {
-    Viewport.getDimensions(this._changedOrientation); // args is invalid
   }
 
   _changedOrientation(dimensions: Object) {
@@ -125,12 +120,14 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.portraitMainContainer}>
-        <RwpodSlider style={styles.portraitSeekSlider}
-                     value={this.state.audioSeek.position}
-                     minimumValue={0}
-                     maximumValue={this.state.audioSeek.duration}
-                     onValueChange={(val) => console.log('RwpodSlider onValueChange', val) }
-                     onSlidingComplete={(val) => console.log('RwpodSlider onSlidingComplete', val) } />
+        <Slider style={styles.portraitSeekSlider}
+                 trackStyle={styles.sliderTrack}
+                 thumbStyle={styles.sliderThumb}
+                 value={this.state.audioSeek.position}
+                 minimumValue={0}
+                 maximumValue={this.state.audioSeek.duration}
+                 onValueChange={(val) => console.log('RwpodSlider onValueChange', val) }
+                 onSlidingComplete={(val) => console.log('RwpodSlider onSlidingComplete', val) } />
         <View style={styles.portraitImageContainer}>
           <TouchableHighlight onPress={this._onTogglePlay}>
             <Image
@@ -285,8 +282,35 @@ var styles = StyleSheet.create({
     backgroundColor: "#dddddd",
   },
   portraitSeekSlider: {
-    height: 25,
+    height: 20,
     margin: 10,
+  },
+  sliderTrack: {
+    height: 10,
+    borderRadius: 4,
+    backgroundColor: 'white',
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 1
+    },
+    shadowRadius: 1,
+    shadowOpacity: 0.15,
+  },
+  sliderThumb: {
+    width: 20,
+    height: 20,
+    backgroundColor: '#f8a1d6',
+    borderColor: '#a4126e',
+    borderWidth: 5,
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowRadius: 2,
+    shadowOpacity: 0.35,
   },
 
 

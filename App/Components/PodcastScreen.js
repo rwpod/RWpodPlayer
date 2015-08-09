@@ -35,6 +35,7 @@ class PodcastScreen extends React.Component {
     this._renderLandscape = this._renderLandscape.bind(this);
     this._improveHTML = this._improveHTML.bind(this);
     /* slider */
+    this._sliderOnSlidingStart = this._sliderOnSlidingStart.bind(this);
     this._sliderOnValueChange = this._sliderOnValueChange.bind(this);
     this._sliderOnSlidingComplete = this._sliderOnSlidingComplete.bind(this);
     /* audio binds */
@@ -123,6 +124,7 @@ class PodcastScreen extends React.Component {
                  value={this.state.audioSeek.position}
                  minimumValue={0}
                  maximumValue={this.state.audioSeek.duration}
+                 onSlidingStart={this._sliderOnSlidingStart}
                  onValueChange={this._sliderOnValueChange}
                  onSlidingComplete={this._sliderOnSlidingComplete} />
         <View style={styles.portraitImageContainer}>
@@ -232,9 +234,17 @@ class PodcastScreen extends React.Component {
     }
   }
 
-  _sliderOnValueChange(value) {
+  _sliderOnSlidingStart(value) {
     this.setState((prevState) => {
       prevState.isAudioSeeking = true;
+      prevState.audioSeek.position = value;
+      return prevState;
+    });
+    return value;
+  }
+
+  _sliderOnValueChange(value) {
+    this.setState((prevState) => {
       prevState.audioSeek.position = value;
       return prevState;
     });

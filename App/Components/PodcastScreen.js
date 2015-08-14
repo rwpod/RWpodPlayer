@@ -14,6 +14,7 @@ var {
   StyleSheet
 } = React;
 var Slider = require('react-native-slider');
+var { Icon } = require('react-native-icons');
 var AudioPlayer = require('../Lib/AudioPlayer');
 var AudioSubscriber = require('../Lib/AudioSubscriber');
 var Viewport = require('../Lib/Viewport');
@@ -134,6 +135,22 @@ class PodcastScreen extends React.Component {
               style={styles.portraitPodcastImage}
             />
           </TouchableHighlight>
+        </View>
+        <View style={styles.portraitInfoContainer}>
+          <TouchableHighlight onPress={this._onTogglePlay} underlayColor='#FFFFFF'>
+            <Icon
+              name='ion|ios-play'
+              size={90}
+              color='#000000'
+              style={audioControlStyles.playButtonIcon}
+            />
+          </TouchableHighlight>
+          <Icon
+            name='ion|ios-pause'
+            size={90}
+            color='#000000'
+            style={audioControlStyles.playButtonIcon}
+          />
         </View>
         <View style={styles.portraitInfoContainer}>
           <Text style={styles.portraitPodcastDate} numberOfLines={1}>
@@ -262,6 +279,14 @@ class PodcastScreen extends React.Component {
   }
 }
 
+
+var audioControlStyles = StyleSheet.create({
+  playButtonIcon: {
+    width: 70,
+    height: 90,
+    margin: 10
+  }
+});
 
 
 var styles = StyleSheet.create({

@@ -44,12 +44,14 @@ class RWpodPlayer extends React.Component {
       >
         <TabBarIOS.Item
           iconName={'ion|social-rss'}
-          title={''}
+          title={'Podcasts'}
           iconSize={32}
           accessibilityLabel="Podcasts"
           selected={this._isSelectedTab('podcasts')}
           onPress={() => this._selectTab('podcasts')}>
             <NavigatorIOS
+              tintColor={'#087C78'}
+              barTintColor={'#E2DBCB'}
               style={styles.container}
               initialRoute={{
                 component: Podcasts,
@@ -62,7 +64,7 @@ class RWpodPlayer extends React.Component {
         </TabBarIOS.Item>
         <TabBarIOS.Item
           iconName={'ion|happy-outline'}
-          title={''}
+          title={'About'}
           iconSize={32}
           accessibilityLabel="About"
           selected={this._isSelectedTab('about')}

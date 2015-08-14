@@ -129,14 +129,6 @@ class PodcastScreen extends React.Component {
                  onValueChange={this._sliderOnValueChange}
                  onSlidingComplete={this._sliderOnSlidingComplete} />
         <View style={styles.portraitImageContainer}>
-          <TouchableHighlight onPress={this._onTogglePlay}>
-            <Image
-              source={{uri}}
-              style={styles.portraitPodcastImage}
-            />
-          </TouchableHighlight>
-        </View>
-        <View style={styles.portraitInfoContainer}>
           <TouchableHighlight onPress={this._onTogglePlay} underlayColor='#FFFFFF'>
             <Icon
               name='ion|ios-play'
@@ -145,12 +137,9 @@ class PodcastScreen extends React.Component {
               style={audioControlStyles.playButtonIcon}
             />
           </TouchableHighlight>
-          <Icon
-            name='ion|ios-pause'
-            size={90}
-            color='#000000'
-            style={audioControlStyles.playButtonIcon}
-          />
+          <Image
+            source={{uri}}
+            style={styles.portraitPodcastImage} />
         </View>
         <View style={styles.portraitInfoContainer}>
           <Text style={styles.portraitPodcastDate} numberOfLines={1}>

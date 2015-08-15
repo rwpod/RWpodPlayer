@@ -8,9 +8,9 @@ var React = require("react-native");
 var {
   AppRegistry,
   NavigatorIOS,
+  TabBarIOS,
   StyleSheet
 } = React;
-var { TabBarIOS } = require('react-native-icons');
 var EventEmitter = require("EventEmitter");
 var Podcasts = require("./App/Components/Podcasts");
 var AboutScreen = require("./App/Components/AboutScreen")
@@ -37,16 +37,13 @@ class RWpodPlayer extends React.Component {
   render () {
     return (
       <TabBarIOS
-        selectedTab={this.state.selectedTab}
         tintColor={'#087C78'}
         barTintColor={'#E2DBCB'}
-        styles={styles.tabBar}
       >
         <TabBarIOS.Item
-          iconName={'ion|social-rss'}
           title={'Podcasts'}
-          iconSize={32}
-          accessibilityLabel="Podcasts"
+          systemIcon='featured'
+          style={styles.tabBarItem}
           selected={this._isSelectedTab('podcasts')}
           onPress={() => this._selectTab('podcasts')}>
             <NavigatorIOS
@@ -63,10 +60,9 @@ class RWpodPlayer extends React.Component {
             />
         </TabBarIOS.Item>
         <TabBarIOS.Item
-          iconName={'ion|happy-outline'}
           title={'About'}
-          iconSize={32}
-          accessibilityLabel="About"
+          systemIcon='more'
+          style={styles.tabBarItem}
           selected={this._isSelectedTab('about')}
           onPress={() => this._selectTab('about')}>
             <AboutScreen />
@@ -98,11 +94,9 @@ var styles = StyleSheet.create({
     backgroundColor: "#111111",
     marginBottom: 50
   },
-  tabBar: {
-    backgroundColor: '#E2DBCB',
+  tabBarItem: {
     flex: 1,
-    color: '#ff0000',
-    tintColor: '#087C78'
+    backgroundColor: "#E2DBCB",
   }
 });
 

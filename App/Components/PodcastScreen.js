@@ -11,7 +11,8 @@ var {
   TouchableHighlight,
   View,
   WebView,
-  StyleSheet
+  StyleSheet,
+  LinkingIOS
 } = React;
 var Slider = require('react-native-slider');
 var { Icon } = require('react-native-icons');
@@ -30,11 +31,11 @@ class PodcastScreen extends React.Component {
     super(props);
     /* binds */
     this._onNavigationStateChange = this._onNavigationStateChange.bind(this);
+    this.preventChangeHTML = this.preventChangeHTML.bind(this);
     this._changedOrientation = this._changedOrientation.bind(this);
     this._isDeviseInPortrait = this._isDeviseInPortrait.bind(this);
     this._renderPortrait = this._renderPortrait.bind(this);
     this._renderLandscape = this._renderLandscape.bind(this);
-    this._improveHTML = this._improveHTML.bind(this);
     /* slider */
     this._sliderOnSlidingStart = this._sliderOnSlidingStart.bind(this);
     this._sliderOnValueChange = this._sliderOnValueChange.bind(this);
@@ -46,6 +47,7 @@ class PodcastScreen extends React.Component {
     /* state */
     this.state = {
       deviseOrientation: "portrait",
+      podcastHTML: props.podcast.description,
       isAudioSeeking: false,
       audioData: {
         status: "STOPPED"
@@ -78,10 +80,6 @@ class PodcastScreen extends React.Component {
     });
   }
 
-  _improveHTML() {
-    return this.props.podcast.description.replace(/<a\s+/g, "<a target=\"_blank\" ");
-  }
-
   _changedOrientation(dimensions: Object) {
     var deviseOrientation = "portrait";
     if (dimensions.width > dimensions.height) {
@@ -95,7 +93,30 @@ class PodcastScreen extends React.Component {
 
 
   _onNavigationStateChange(navState) {
-    console.log("onNavigationStateChange", navState);
+    if ('about:blank' !== navState.url) {
+      var url = navState.url;
+      LinkingIOS.canOpenURL(url, (supported) => {
+        if (!supported) {
+          AlertIOS.alert('Can\'t handle url: ' + url);
+        } else {
+          LinkingIOS.openURL(url);
+          this.preventChangeHTML();
+        }
+      });
+    }
+  }
+
+  preventChangeHTML() {
+    this.setState((prevState) => {
+      var html = prevState.podcastHTML;
+      if (html === this.props.podcast.description){
+        html += "&nbsp;";
+      } else {
+        html = this.props.podcast.description;
+      }
+      prevState.podcastHTML = html;
+      return prevState;
+    });
   }
 
 
@@ -156,8 +177,8 @@ class PodcastScreen extends React.Component {
             automaticallyAdjustContentInsets={false}
             bounces={true}
             style={styles.portraitWebView}
-            html={this._improveHTML()}
-            javaScriptEnabledAndroid={false}
+            html={this.state.podcastHTML}
+            javaScriptEnabledAndroid={true}
             onNavigationStateChange={this._onNavigationStateChange}
             shouldInjectAJAXHandler={false}
             startInLoadingState={false}
@@ -198,7 +219,7 @@ class PodcastScreen extends React.Component {
             automaticallyAdjustContentInsets={false}
             bounces={true}
             style={styles.landscapeWebView}
-            html={this._improveHTML()}
+            html={this.state.podcastHTML}
             javaScriptEnabledAndroid={false}
             onNavigationStateChange={this._onNavigationStateChange}
             shouldInjectAJAXHandler={false}

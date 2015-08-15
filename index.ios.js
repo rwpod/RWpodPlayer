@@ -39,6 +39,7 @@ class RWpodPlayer extends React.Component {
       <TabBarIOS
         tintColor={'#087C78'}
         barTintColor={'#E2DBCB'}
+        style={styles.tabBar}
       >
         <TabBarIOS.Item
           title={'Podcasts'}
@@ -93,6 +94,9 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#111111",
     marginBottom: 50
+  },
+  tabBar: {
+    flex: 1
   },
   tabBarItem: {
     flex: 1,

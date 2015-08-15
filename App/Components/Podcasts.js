@@ -16,6 +16,7 @@ var {
 var Subscribable = require("Subscribable");
 var PodcastCell = require("./PodcastCell");
 var PodcastScreen = require("./PodcastScreen");
+var ViewSubscriber = require('../Lib/ViewSubscriber');
 var Api = require("../Utils/Api");
 
 
@@ -31,6 +32,7 @@ class Podcasts extends React.Component {
     this.loadPodcasts = this.loadPodcasts.bind(this);
     this.handlePodcastsResponse = this.handlePodcastsResponse.bind(this);
     this.handlePodcastsError = this.handlePodcastsError.bind(this);
+    /* binds */
     this._renderRow = this._renderRow.bind(this);
     this._renderPodcastsList = this._renderPodcastsList.bind(this);
     this._renderSeparator = this._renderSeparator.bind(this);
@@ -40,8 +42,13 @@ class Podcasts extends React.Component {
     this._mergeNewPodcasts = this._mergeNewPodcasts.bind(this);
     this._noMorePodcasts = this._noMorePodcasts.bind(this);
     this._handleRefreshPodcasts = this._handleRefreshPodcasts.bind(this);
+    /* orientation */
+    this._changedOrientation = this._changedOrientation.bind(this);
+    this._isDeviseInPortrait = this._isDeviseInPortrait.bind(this);
+    this._getMainStyles = this._getMainStyles.bind(this);
     /* set state */
     this.state = {
+      deviseOrientation: "portrait",
       loading: false,
       dataNotLoaded: false,
       canLoadMore: true,
@@ -62,11 +69,27 @@ class Podcasts extends React.Component {
       this.loadPodcasts();
     }
     Subscribable.Mixin.addListenerOn(this.props.emitter, 'refreshPodcasts', this._handleRefreshPodcasts);
+    /* main */
+    this.viewSubscriber = new ViewSubscriber();
+    this.viewSubscriber.initViewport(this._changedOrientation);
   }
 
   componentWillUnmount() {
     /* mixin */
     Subscribable.Mixin.componentWillUnmount();
+    /* cleanup */
+    this.viewSubscriber.remove();
+  }
+
+  _changedOrientation(dimensions: Object) {
+    var deviseOrientation = "portrait";
+    if (dimensions.width > dimensions.height) {
+      deviseOrientation = "landscape";
+    }
+    /* set state */
+    this.setState({
+      deviseOrientation: deviseOrientation
+    });
   }
 
   _handleRefreshPodcasts() {
@@ -114,12 +137,24 @@ class Podcasts extends React.Component {
 
   render() {
     return (
-      <View style={styles.mainContainer}>
+      <View style={this._getMainStyles()}>
         {this._renderLoader()}
         {this._renderLoadButtons()}
         {this._renderPodcastsList()}
       </View>
     );
+  }
+
+  _isDeviseInPortrait(): boolean {
+    return "portrait" === this.state.deviseOrientation;
+  }
+
+  _getMainStyles() {
+    if (this._isDeviseInPortrait()){
+      return [styles.mainContainer, styles.portraitMainContainer];
+    } else {
+      return [styles.mainContainer, styles.landscapeMainContainer];
+    }
   }
 
   _renderPodcastsList() {
@@ -233,10 +268,15 @@ class Podcasts extends React.Component {
 var styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    marginTop: 65,
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: "#FFFFFF"
+  },
+  portraitMainContainer: {
+    marginTop: 65
+  },
+  landscapeMainContainer: {
+    marginTop: 30
   },
   loader: {
     alignItems: "center",

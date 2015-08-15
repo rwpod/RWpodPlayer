@@ -20,9 +20,7 @@ class AboutScreen extends React.Component {
   render() {
     return (
       <View>
-        <Text>
-          About
-        </Text>
+        <Text>About</Text>
       </View>
     );
   }

@@ -13,7 +13,8 @@ var {
 } = React;
 var EventEmitter = require("EventEmitter");
 var Podcasts = require("./App/Components/Podcasts");
-var AboutScreen = require("./App/Components/AboutScreen")
+var AboutScreen = require("./App/Components/AboutScreen");
+var ViewSubscriber = require("./App/Lib/ViewSubscriber");
 
 
 class RWpodPlayer extends React.Component {
@@ -26,6 +27,9 @@ class RWpodPlayer extends React.Component {
     this._isSelectedTab = this._isSelectedTab.bind(this);
     this._selectTab = this._selectTab.bind(this);
     this._refreshPodcasts = this._refreshPodcasts.bind(this);
+    /* views */
+    this._renderPodcasts = this._renderPodcasts.bind(this);
+    this._renderAbout = this._renderAbout.bind(this);
     /* event emitter */
     this.emitter = new EventEmitter();
     /* state */
@@ -39,26 +43,14 @@ class RWpodPlayer extends React.Component {
       <TabBarIOS
         tintColor={'#087C78'}
         barTintColor={'#E2DBCB'}
-        style={styles.tabBar}
-      >
+        style={styles.tabBar}>
         <TabBarIOS.Item
           title={'Podcasts'}
           systemIcon='featured'
           style={styles.tabBarItem}
           selected={this._isSelectedTab('podcasts')}
           onPress={() => this._selectTab('podcasts')}>
-            <NavigatorIOS
-              tintColor={'#087C78'}
-              barTintColor={'#E2DBCB'}
-              style={styles.container}
-              initialRoute={{
-                component: Podcasts,
-                title: "Podcasts",
-                rightButtonTitle: "Refresh",
-                passProps: { emitter: this.emitter },
-                onRightButtonPress: this._refreshPodcasts
-              }}
-            />
+          {this._renderPodcasts()}
         </TabBarIOS.Item>
         <TabBarIOS.Item
           title={'About'}
@@ -66,10 +58,33 @@ class RWpodPlayer extends React.Component {
           style={styles.tabBarItem}
           selected={this._isSelectedTab('about')}
           onPress={() => this._selectTab('about')}>
-            <AboutScreen />
+          {this._renderAbout()}
         </TabBarIOS.Item>
       </TabBarIOS>
     );
+  }
+
+  _renderPodcasts() {
+    return (
+      <NavigatorIOS
+        tintColor={'#087C78'}
+        barTintColor={'#E2DBCB'}
+        style={styles.navigatorContainer}
+        initialRoute={{
+          component: Podcasts,
+          title: "Podcasts",
+          rightButtonTitle: "Refresh",
+          passProps: { emitter: this.emitter },
+          onRightButtonPress: this._refreshPodcasts
+        }}
+      />
+    )
+  }
+
+  _renderAbout() {
+    return (
+      <AboutScreen />
+    )
   }
 
   _refreshPodcasts () {
@@ -90,17 +105,17 @@ class RWpodPlayer extends React.Component {
 
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#111111",
-    marginBottom: 50
-  },
   tabBar: {
     flex: 1
   },
   tabBarItem: {
     flex: 1,
     backgroundColor: "#E2DBCB",
+  },
+  navigatorContainer: {
+    flex: 1,
+    backgroundColor: "#111111",
+    marginBottom: 50
   }
 });
 

@@ -6,18 +6,50 @@
 
 var React = require("react-native");
 var {
+  AlertIOS,
   View,
   WebView,
-  StyleSheet
+  StyleSheet,
+  LinkingIOS
 } = React;
+var Subscribable = require("Subscribable");
+
 
 var CHAT_URL = 'https://gitter.im/rwpod/public';
 var SCRIPT_INJECT = 'var element = document.getElementById("login-footer"); element.parentNode.removeChild(element);';
 
 class ChatScreen extends React.Component {
+  static propTypes: {
+    emitter: React.PropTypes.object.idRequired
+  };
 
   constructor(props) {
     super(props);
+    /*binds*/
+    this._handleOpenChat = this._handleOpenChat.bind(this);
+  }
+
+  componentWillMount() {
+    /* mixin */
+    Subscribable.Mixin.componentWillMount();
+  }
+
+  componentDidMount() {
+    Subscribable.Mixin.addListenerOn(this.props.emitter, 'openChat', this._handleOpenChat);
+  }
+
+  componentWillUnmount() {
+    Subscribable.Mixin.componentWillUnmount();
+  }
+
+  _handleOpenChat() {
+    LinkingIOS.canOpenURL(CHAT_URL, (supported) => {
+      if (!supported) {
+        AlertIOS.alert('Can\'t handle url: ' + CHAT_URL);
+      } else {
+        LinkingIOS.openURL(CHAT_URL);
+      }
+    });
   }
 
   render() {
@@ -52,7 +84,8 @@ var styles = StyleSheet.create({
   webContainer: {
     flex: 1,
     flexDirection: "column",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "#E2DBCB"
   }
 });
 

@@ -12,7 +12,8 @@ var {
   View,
   WebView,
   StyleSheet,
-  LinkingIOS
+  LinkingIOS,
+  AlertIOS
 } = React;
 var Slider = require('react-native-slider');
 var { Icon } = require('react-native-icons');
@@ -365,8 +366,8 @@ var portraitStyles = StyleSheet.create({
   },
   podcastImage: {
     backgroundColor: "#dddddd",
-    height: 200,
-    width: 200,
+    height: 150,
+    width: 150,
   },
   audioContainer: {
 

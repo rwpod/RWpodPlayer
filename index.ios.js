@@ -28,6 +28,7 @@ class RWpodPlayer extends React.Component {
     this._isSelectedTab = this._isSelectedTab.bind(this);
     this._selectTab = this._selectTab.bind(this);
     this._refreshPodcasts = this._refreshPodcasts.bind(this);
+    this._openChat = this._openChat.bind(this);
     /* views */
     this._renderPodcasts = this._renderPodcasts.bind(this);
     this._renderAbout = this._renderAbout.bind(this);
@@ -92,7 +93,18 @@ class RWpodPlayer extends React.Component {
 
   _renderChat() {
     return (
-      <ChatScreen />
+      <NavigatorIOS
+        tintColor={'#087C78'}
+        barTintColor={'#E2DBCB'}
+        style={styles.navigatorContainer}
+        initialRoute={{
+          component: ChatScreen,
+          title: "Chat",
+          rightButtonTitle: "Open",
+          passProps: { emitter: this.emitter },
+          onRightButtonPress: this._openChat
+        }}
+      />
     )
   }
 
@@ -104,6 +116,10 @@ class RWpodPlayer extends React.Component {
 
   _refreshPodcasts () {
     this.emitter.emit("refreshPodcasts");
+  }
+
+  _openChat () {
+    this.emitter.emit("openChat");
   }
 
   _isSelectedTab (tabName): boolean {

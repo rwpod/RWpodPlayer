@@ -12,8 +12,9 @@ var {
   StyleSheet
 } = React;
 var EventEmitter = require("EventEmitter");
-var Podcasts = require("./App/Components/Podcasts");
 var AboutScreen = require("./App/Components/AboutScreen");
+var ChatScreen = require("./App/Components/ChatScreen");
+var PodcastsScreen = require("./App/Components/PodcastsScreen");
 var ViewSubscriber = require("./App/Lib/ViewSubscriber");
 
 
@@ -53,6 +54,14 @@ class RWpodPlayer extends React.Component {
           {this._renderPodcasts()}
         </TabBarIOS.Item>
         <TabBarIOS.Item
+          title={'Chat'}
+          systemIcon='contacts'
+          style={styles.tabBarItem}
+          selected={this._isSelectedTab('chat')}
+          onPress={() => this._selectTab('chat')}>
+          {this._renderChat()}
+        </TabBarIOS.Item>
+        <TabBarIOS.Item
           title={'About'}
           systemIcon='more'
           style={styles.tabBarItem}
@@ -71,13 +80,19 @@ class RWpodPlayer extends React.Component {
         barTintColor={'#E2DBCB'}
         style={styles.navigatorContainer}
         initialRoute={{
-          component: Podcasts,
+          component: PodcastsScreen,
           title: "Podcasts",
           rightButtonTitle: "Refresh",
           passProps: { emitter: this.emitter },
           onRightButtonPress: this._refreshPodcasts
         }}
       />
+    )
+  }
+
+  _renderChat() {
+    return (
+      <ChatScreen />
     )
   }
 
@@ -111,11 +126,11 @@ var styles = StyleSheet.create({
   tabBarItem: {
     flex: 1,
     backgroundColor: "#E2DBCB",
+    marginBottom: 50
   },
   navigatorContainer: {
     flex: 1,
-    backgroundColor: "#111111",
-    marginBottom: 50
+    backgroundColor: "#111111"
   }
 });
 

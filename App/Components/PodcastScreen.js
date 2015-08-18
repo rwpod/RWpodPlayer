@@ -20,7 +20,6 @@ var AudioPlayer = require('../Lib/AudioPlayer');
 var Device = require('../Lib/Device');
 var ViewSubscriber = require('../Lib/ViewSubscriber');
 
-
 class PodcastScreen extends React.Component {
 
   static propTypes: {

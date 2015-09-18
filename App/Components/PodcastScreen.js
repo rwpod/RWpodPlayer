@@ -215,6 +215,8 @@ class PodcastScreen extends React.Component {
         <Slider style={styles.seekSlider}
                  trackStyle={styles.sliderTrack}
                  thumbStyle={styles.sliderThumb}
+                 minimumTrackTintColor='#31a4db'
+                thumbTouchSize={{width: 50, height: 40}}
                  value={this.state.audioSeek.position}
                  minimumValue={0}
                  maximumValue={this.state.audioSeek.duration}
@@ -333,31 +335,18 @@ var portraitStyles = StyleSheet.create({
     marginRight: 30,
   },
   sliderTrack: {
-    height: 10,
-    borderRadius: 4,
-    backgroundColor: 'white',
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowRadius: 1,
-    shadowOpacity: 0.15,
+    height: 2,
+    backgroundColor: '#303030',
   },
   sliderThumb: {
-    width: 20,
-    height: 20,
-    backgroundColor: '#f8a1d6',
-    borderColor: '#a4126e',
-    borderWidth: 5,
-    borderRadius: 10,
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
+    width: 10,
+    height: 10,
+    backgroundColor: '#31a4db',
+    borderRadius: 10 / 2,
+    shadowColor: '#31a4db',
+    shadowOffset: {width: 0, height: 0},
     shadowRadius: 2,
-    shadowOpacity: 0.35,
+    shadowOpacity: 1,
   },
   imageContainer: {
     alignItems: "center",

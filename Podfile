@@ -1,6 +1,6 @@
 source 'git@github.com:/CocoaPods/Specs.git'
 
-platform :ios, '8.0'
+platform :ios, '9.0'
 
 pod 'StreamingKit', git: 'https://github.com/tumtumtum/StreamingKit.git'
 

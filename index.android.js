@@ -12,8 +12,9 @@ var {
   View,
 } = React;
 
-var RWpodPlayer = React.createClass({
-  render: function() {
+class RWpodPlayer extends React.Component {
+
+  render() {
     return (
       <View style={styles.container}>
         <Text style={styles.welcome}>
@@ -23,12 +24,13 @@ var RWpodPlayer = React.createClass({
           To get started, edit index.android.js
         </Text>
         <Text style={styles.instructions}>
-          Shake or press menu button for dev menu
+          Shake or press menu button for dev menu 111
         </Text>
       </View>
     );
   }
-});
+
+}
 
 var styles = StyleSheet.create({
   container: {

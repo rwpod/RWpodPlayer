@@ -36,27 +36,35 @@ class AudioPlayer {
   static play(uri: string) {
     AudioManager.play(uri);
   }
+
   static stop() {
     AudioManager.stop();
   }
+
   static pause() {
     AudioManager.pause();
   }
+
   static resume() {
     AudioManager.resume();
   }
+
   static seek(position: number) {
     AudioManager.seek(position);
   }
+
   static getStatus(callback: Function) {
     return AudioManager.getStatus(callback);
   }
+
   static getSeekStatus(callback: Function) {
     return AudioManager.getSeekStatus(callback);
   }
+
   static setPlayingInfo(title: string, albom: string, artist: string) {
     AudioManager.setPlayingInfo(title, albom, artist);
   }
+
 }
 
 module.exports = AudioPlayer;

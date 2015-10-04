@@ -20,6 +20,7 @@
 {
   self = [super init];
   if (self) {
+    self.mediaUrl = @"";
     self.audioPlayer = [[STKAudioPlayer alloc] initWithOptions:(STKAudioPlayerOptions){ .flushQueueOnSeek = YES, .readBufferSize = 64 * 1024 }];
     [self.audioPlayer setDelegate:self];
     [self setSharedAudioSessionCategory];
@@ -47,11 +48,15 @@ RCT_EXPORT_METHOD(play:(NSString *)uri)
   if (!self.audioPlayer) {
     return;
   }
+  self.mediaUrl = uri;
+  [self.audioPlayer play:uri];
+  /*
   if (self.audioPlayer.state == STKAudioPlayerStatePaused) {
     [self.audioPlayer resume];
   } else {
     [self.audioPlayer play:uri];
   }
+   */
 }
 
 RCT_EXPORT_METHOD(pause)
@@ -79,6 +84,7 @@ RCT_EXPORT_METHOD(stop)
   } else {
     [self.audioPlayer stop];
   }
+  self.mediaUrl = @"";
 }
 
 RCT_EXPORT_METHOD(seek:(double)position)
@@ -93,13 +99,13 @@ RCT_EXPORT_METHOD(seek:(double)position)
 RCT_EXPORT_METHOD(getStatus:(RCTResponseSenderBlock) callback)
 {
   if (!self.audioPlayer) {
-    callback(@[[NSNull null], @{@"status": @"ERROR"}]);
+    callback(@[[NSNull null], @{@"status": @"ERROR", @"uri": self.mediaUrl}]);
   } else if ([self.audioPlayer state] == STKAudioPlayerStatePlaying) {
-    callback(@[[NSNull null], @{@"status": @"PLAYING"}]);
+    callback(@[[NSNull null], @{@"status": @"PLAYING", @"uri": self.mediaUrl}]);
   } else if ([self.audioPlayer state] == STKAudioPlayerStateBuffering) {
-    callback(@[[NSNull null], @{@"status": @"BUFFERING"}]);
+    callback(@[[NSNull null], @{@"status": @"BUFFERING", @"uri": self.mediaUrl}]);
   } else {
-    callback(@[[NSNull null], @{@"status": @"STOPPED"}]);
+    callback(@[[NSNull null], @{@"status": @"STOPPED", @"uri": self.mediaUrl}]);
   }
 }
 
@@ -156,27 +162,27 @@ RCT_EXPORT_METHOD(setPlayingInfo:(NSString *)title album:(NSString *)album artis
   switch (state) {
     case STKAudioPlayerStatePlaying:
       [self.bridge.eventDispatcher sendDeviceEventWithName:@"AudioBridgeEvent"
-                                                      body:@{@"status": @"PLAYING"}];
+                                                      body:@{@"status": @"PLAYING", @"uri": self.mediaUrl}];
       break;
 
     case STKAudioPlayerStatePaused:
       [self.bridge.eventDispatcher sendDeviceEventWithName:@"AudioBridgeEvent"
-                                                      body:@{@"status": @"PAUSED"}];
+                                                      body:@{@"status": @"PAUSED", @"uri": self.mediaUrl}];
       break;
 
     case STKAudioPlayerStateStopped:
       [self.bridge.eventDispatcher sendDeviceEventWithName:@"AudioBridgeEvent"
-                                                      body:@{@"status": @"STOPPED"}];
+                                                      body:@{@"status": @"STOPPED", @"uri": self.mediaUrl}];
       break;
 
     case STKAudioPlayerStateBuffering:
       [self.bridge.eventDispatcher sendDeviceEventWithName:@"AudioBridgeEvent"
-                                                      body:@{@"status": @"BUFFERING"}];
+                                                      body:@{@"status": @"BUFFERING", @"uri": self.mediaUrl}];
       break;
 
     case STKAudioPlayerStateError:
       [self.bridge.eventDispatcher sendDeviceEventWithName:@"AudioBridgeEvent"
-                                                      body:@{@"status": @"ERROR"}];
+                                                      body:@{@"status": @"ERROR", @"uri": self.mediaUrl}];
       break;
 
     default:

@@ -126,24 +126,34 @@ class PodcastScreen extends React.Component {
   }
 
   _onTogglePlay() {
-    switch(this.state.audioData.status){
-      case "STOPPED":
-        AudioPlayer.play(this.props.podcast.audio_url);
-        AudioPlayer.setPlayingInfo(this.props.podcast.title, "", "RWpod");
-        break;
-      case "PLAYING":
-        AudioPlayer.pause();
-        break;
-      case "PAUSED":
-        AudioPlayer.resume();
-        break;
-      default:
-        AudioPlayer.stop();
+    var uri = this.state.audioData.uri;
+    var status = this.state.audioData.status;
+
+    if (uri && uri === this.props.podcast.audio_url) {
+      switch(status){
+        case "STOPPED":
+          AudioPlayer.play(this.props.podcast.audio_url);
+          AudioPlayer.setPlayingInfo(this.props.podcast.title, "", "RWpod");
+          break;
+        case "PLAYING":
+          AudioPlayer.pause();
+          break;
+        case "PAUSED":
+          AudioPlayer.resume();
+          break;
+        default:
+          AudioPlayer.stop();
+      }
+    } else {
+      AudioPlayer.play(this.props.podcast.audio_url);
+      AudioPlayer.setPlayingInfo(this.props.podcast.title, "", "RWpod");
     }
   }
 
   _seekTimerCallback() {
-    if ("PLAYING" === this.state.audioData.status && !this.state.isAudioSeeking) {
+    var uri = this.state.audioData.uri;
+
+    if (uri && uri === this.props.podcast.audio_url && "PLAYING" === this.state.audioData.status && !this.state.isAudioSeeking) {
       AudioPlayer.getSeekStatus((error, seekData) => {
         if (error) {
           console.log('PodcastScreen seekTimerCallback', error)

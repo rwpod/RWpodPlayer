@@ -25,8 +25,8 @@ class Podcasts extends React.Component {
     emitter: React.PropTypes.object.idRequired
   };
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     /* binds */
     this.selectPodcast = this.selectPodcast.bind(this);
     this.loadPodcasts = this.loadPodcasts.bind(this);

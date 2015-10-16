@@ -13,8 +13,8 @@ var {
 
 class AboutScreen extends React.Component {
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
   }
 
   render() {

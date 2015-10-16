@@ -20,8 +20,8 @@ class PodcastCell extends React.Component {
     podcast: React.PropTypes.object.idRequired
   };
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
   }
 
   render() {
@@ -82,6 +82,9 @@ var styles = StyleSheet.create({
     height: 100,
     marginRight: 5,
     width: 100,
+    borderStyle: "solid",
+    borderColor: "#CCCCCC",
+    borderWidth: 1 / PixelRatio.get(),
   },
   cellBorder: {
     backgroundColor: 'rgba(0, 0, 0, 0.1)',

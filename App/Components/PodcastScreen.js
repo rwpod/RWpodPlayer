@@ -13,7 +13,8 @@ var {
   WebView,
   StyleSheet,
   LinkingIOS,
-  AlertIOS
+  AlertIOS,
+  PixelRatio
 } = React;
 var Slider = require('react-native-slider');
 var { Icon } = require('react-native-icons');
@@ -27,8 +28,8 @@ class PodcastScreen extends React.Component {
     podcast: React.PropTypes.object.idRequired
   };
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     /* binds */
     this._onNavigationStateChange = this._onNavigationStateChange.bind(this);
     this.preventChangeHTML = this.preventChangeHTML.bind(this);
@@ -43,9 +44,17 @@ class PodcastScreen extends React.Component {
     /* audio binds */
     this._audioChangeState = this._audioChangeState.bind(this);
     this._onTogglePlay = this._onTogglePlay.bind(this);
+    this._onStopPlay = this._onStopPlay.bind(this);
     this._seekTimerCallback = this._seekTimerCallback.bind(this);
+    this.showHumanAudioPosition = this.showHumanAudioPosition.bind(this);
+    this.isCurrentAudio = this.isCurrentAudio.bind(this);
+    this.initialState = this.initialState.bind(this);
     /* state */
-    this.state = {
+    this.state = this.initialState(props);
+  }
+
+  initialState(props) {
+    return {
       deviseOrientation: "portrait",
       podcastHTML: props.podcast.description,
       isAudioSeeking: false,
@@ -56,7 +65,12 @@ class PodcastScreen extends React.Component {
         duration: 0,
         position: 0
       }
-    }
+    };
+  }
+
+  isCurrentAudio() {
+    var uri = this.state.audioData.uri;
+    return (uri && uri === this.props.podcast.audio_url);
   }
 
   componentDidMount() {
@@ -75,9 +89,11 @@ class PodcastScreen extends React.Component {
   }
 
   _audioChangeState(status) {
-    this.setState({
-      audioData: status
-    });
+    if (status && status.uri && status.uri === this.props.podcast.audio_url){
+      this.setState({
+        audioData: status
+      });
+    }
   }
 
   _changedOrientation(dimensions: Object) {
@@ -111,7 +127,7 @@ class PodcastScreen extends React.Component {
       var htmlOriginal = this.props.podcast.description;
       var html = prevState.podcastHTML;
 
-      if (html === htmlOriginal){
+      if (html === htmlOriginal) {
         html = htmlOriginal + "&nbsp;";
       } else {
         html = htmlOriginal;
@@ -126,10 +142,9 @@ class PodcastScreen extends React.Component {
   }
 
   _onTogglePlay() {
-    var uri = this.state.audioData.uri;
-    var status = this.state.audioData.status;
+    if (this.isCurrentAudio()) {
+      var status = this.state.audioData.status;
 
-    if (uri && uri === this.props.podcast.audio_url) {
       switch(status){
         case "STOPPED":
           AudioPlayer.play(this.props.podcast.audio_url);
@@ -150,10 +165,22 @@ class PodcastScreen extends React.Component {
     }
   }
 
-  _seekTimerCallback() {
-    var uri = this.state.audioData.uri;
+  _onStopPlay() {
+    if (this.isCurrentAudio()) {
+      AudioPlayer.stop();
+      this.setState({
+        audioData: {
+          status: "STOPPED"
+        },
+        audioSeek: {
+          position: 0
+        }
+      });
+    }
+  }
 
-    if (uri && uri === this.props.podcast.audio_url && "PLAYING" === this.state.audioData.status && !this.state.isAudioSeeking) {
+  _seekTimerCallback() {
+    if (this.isCurrentAudio() && "PLAYING" === this.state.audioData.status && !this.state.isAudioSeeking) {
       AudioPlayer.getSeekStatus((error, seekData) => {
         if (error) {
           console.log('PodcastScreen seekTimerCallback', error)
@@ -193,6 +220,14 @@ class PodcastScreen extends React.Component {
     return value;
   }
 
+  showHumanAudioPosition() {
+    var totalSec = Math.round(this.state.audioSeek.position);
+    var hours = parseInt(totalSec / 3600) % 24;
+    var minutes = parseInt(totalSec / 60) % 60;
+    var seconds = totalSec % 60;
+    return (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds  < 10 ? "0" + seconds : seconds)
+  }
+
 
 
 
@@ -222,39 +257,62 @@ class PodcastScreen extends React.Component {
 
     return (
       <View style={styles.mainContainer}>
-        <Slider style={styles.seekSlider}
-                 trackStyle={styles.sliderTrack}
-                 thumbStyle={styles.sliderThumb}
-                 minimumTrackTintColor='#31a4db'
-                thumbTouchSize={{width: 50, height: 40}}
-                 value={this.state.audioSeek.position}
-                 minimumValue={0}
-                 maximumValue={this.state.audioSeek.duration}
-                 onSlidingStart={this._sliderOnSlidingStart}
-                 onValueChange={this._sliderOnValueChange}
-                 onSlidingComplete={this._sliderOnSlidingComplete} />
-        <View style={styles.imageContainer}>
-          <TouchableHighlight onPress={this._onTogglePlay} underlayColor='#FFFFFF'>
-            <Icon
-              name='ion|ios-play'
-              size={90}
-              color='#000000'
-              style={audioControlStyles.playButtonIcon}
-            />
-          </TouchableHighlight>
+
+        <View style={styles.topContainer}>
           <Image
             source={{uri}}
             style={styles.podcastImage} />
+
+            <View style={styles.infoCellsContainer}>
+              <Text style={styles.podcastDate} numberOfLines={1}>
+                Дата: {podcast.human_date}
+              </Text>
+              <View style={styles.buttonsContainer}>
+                <TouchableHighlight onPress={this._onTogglePlay} underlayColor='#FFFFFF'>
+                  <Icon
+                    name={["PLAYING", "BUFFERING"].indexOf(this.state.audioData.status) >= 0 ? 'ion|pause' : 'ion|play'}
+                    size={90}
+                    color='#000000'
+                    style={audioControlStyles.buttonIcon}
+                  />
+                </TouchableHighlight>
+                {this.state.audioData.status !== "STOPPED" && <TouchableHighlight onPress={this._onStopPlay} underlayColor='#FFFFFF'>
+                  <Icon
+                    name='ion|stop'
+                    size={90}
+                    color='#000000'
+                    style={audioControlStyles.buttonIcon}
+                  />
+                </TouchableHighlight>}
+              </View>
+            </View>
         </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.podcastDate} numberOfLines={1}>
-            {podcast.human_date}
-            {' '}&bull;{' '}
-            <Text style={styles.podcastDuration}>
-              Duration {podcast.audio_duration}/{this.state.audioData.status}/{this.state.audioSeek.position}
+
+        <View style={styles.sliderContainer}>
+            <Slider style={styles.seekSlider}
+                     trackStyle={styles.sliderTrack}
+                     thumbStyle={styles.sliderThumb}
+                     minimumTrackTintColor='#31a4db'
+                    thumbTouchSize={{width: 50, height: 40}}
+                     value={this.state.audioSeek.position}
+                     minimumValue={0}
+                     maximumValue={this.state.audioSeek.duration}
+                     onSlidingStart={this._sliderOnSlidingStart}
+                     onValueChange={this._sliderOnValueChange}
+                     onSlidingComplete={this._sliderOnSlidingComplete} />
+          <View style={styles.sliderInfoContainer}>
+            <Text style={styles.podcastPosition} numberOfLines={1}>
+              {this.showHumanAudioPosition()}
             </Text>
-          </Text>
+            <Text style={styles.podcastAudioState} numberOfLines={1}>
+              {this.state.audioData.status}
+            </Text>
+            <Text style={styles.podcastDuration} numberOfLines={1}>
+              {podcast.audio_duration}
+            </Text>
+           </View>
         </View>
+
         <View style={styles.webContainer}>
           <WebView
             ref="webview"
@@ -268,6 +326,7 @@ class PodcastScreen extends React.Component {
             startInLoadingState={false}
           />
         </View>
+
       </View>
     );
   }
@@ -325,7 +384,7 @@ class PodcastScreen extends React.Component {
 
 
 var audioControlStyles = StyleSheet.create({
-  playButtonIcon: {
+  buttonIcon: {
     width: 70,
     height: 90,
     margin: 10
@@ -339,10 +398,43 @@ var portraitStyles = StyleSheet.create({
     flexDirection: "column",
     backgroundColor: "#FFFFFF"
   },
+  topContainer: {
+    flex: 4,
+    flexDirection: "row",
+    alignItems: "center",
+    height: 200,
+  },
+  podcastImage: {
+    backgroundColor: "#DDDDDD",
+    height: 150,
+    width: 150,
+    borderStyle: "solid",
+    borderColor: "#CCCCCC",
+    borderWidth: 1 / PixelRatio.get(),
+  },
+  infoCellsContainer: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  podcastDate: {
+    color: '#999999',
+    fontSize: 16,
+    padding: 5,
+    textAlign: "center",
+  },
+  buttonsContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  sliderContainer: {
+    flex: 1,
+    flexDirection: "column",
+  },
   seekSlider: {
     height: 20,
-    marginLeft: 30,
-    marginRight: 30,
+    marginLeft: 40,
+    marginRight: 40,
   },
   sliderTrack: {
     height: 2,
@@ -358,33 +450,38 @@ var portraitStyles = StyleSheet.create({
     shadowRadius: 2,
     shadowOpacity: 1,
   },
-  imageContainer: {
+  sliderInfoContainer: {
+    flex: 1,
+    flexDirection: "row",
+  },
+  sliderInfoContainer: {
+    flex: 1,
+    flexDirection: "row",
     alignItems: "center",
-    marginTop: 3,
-    marginBottom: 3,
+    justifyContent: "center",
   },
-  podcastImage: {
-    backgroundColor: "#dddddd",
-    height: 150,
-    width: 150,
-  },
-  audioContainer: {
-
-  },
-  infoContainer: {
-    alignItems: "center",
-  },
-  podcastDate: {
+  podcastPosition: {
+    flex: 2,
     color: '#999999',
     fontSize: 16,
-    padding: 5
+    textAlign: "left",
+    marginLeft: 40,
+  },
+  podcastAudioState: {
+    flex: 3,
+    color: '#999999',
+    fontSize: 16,
+    textAlign: "center",
   },
   podcastDuration: {
+    flex: 2,
     color: '#999999',
     fontSize: 16,
+    textAlign: "right",
+    marginRight: 40,
   },
   webContainer: {
-    flex: 1,
+    flex: 9,
     alignItems: "stretch",
     borderColor: "#CCCCCC",
     borderWidth: 1,

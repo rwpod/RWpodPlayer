@@ -23,8 +23,8 @@ class ChatScreen extends React.Component {
     emitter: React.PropTypes.object.idRequired
   };
 
-  constructor(props) {
-    super(props);
+  constructor(props, context) {
+    super(props, context);
     /*binds*/
     this._handleOpenChat = this._handleOpenChat.bind(this);
   }

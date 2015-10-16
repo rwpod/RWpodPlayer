@@ -30,6 +30,7 @@
 		B38AEA5C1B7E5DAF00C249D5 /* libReactNativeIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B38AEA5B1B7E5DA700C249D5 /* libReactNativeIcons.a */; };
 		B38AEA601B7E5DD400C249D5 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = B38AEA5E1B7E5DD400C249D5 /* FontAwesome.otf */; };
 		B38AEA611B7E5DD400C249D5 /* ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B38AEA5F1B7E5DD400C249D5 /* ionicons.ttf */; };
+		B3A7FD6E1BD19EEE008A5099 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		B3D0E8411B77EFDC0095B934 /* ViewportManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B3D0E8401B77EFDC0095B934 /* ViewportManager.m */; };
 /* End PBXBuildFile section */
 
@@ -170,6 +171,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B3A7FD6E1BD19EEE008A5099 /* libReact.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

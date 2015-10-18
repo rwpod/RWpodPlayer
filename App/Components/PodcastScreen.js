@@ -339,45 +339,7 @@ class PodcastScreen extends React.Component {
       <View style={styles.mainContainer}>
         <Text>Comming soon</Text>
       </View>
-    )
-    /*
-    return (
-      <View style={styles.landscapeMainContainer}>
-        <View style={styles.landscapeCompContainer}>
-          <View style={styles.landscapeImageContainer}>
-            <TouchableHighlight onPress={this._onTogglePlay}>
-              <Image
-                source={{uri}}
-                style={styles.landscapePodcastImage}
-              />
-            </TouchableHighlight>
-          </View>
-          <View style={styles.landscapeInfoContainer}>
-            <Text style={styles.landscapePodcastDate} numberOfLines={1}>
-              {podcast.human_date}
-              {' '}&bull;{' '}
-              <Text style={styles.landscapePodcastDuration}>
-                Duration {podcast.audio_duration}/{this.state.audioData.status}
-              </Text>
-            </Text>
-          </View>
-        </View>
-        <View style={styles.landscapeWebContainer}>
-          <WebView
-            ref="webview"
-            automaticallyAdjustContentInsets={false}
-            bounces={true}
-            style={styles.landscapeWebView}
-            html={this.state.podcastHTML}
-            javaScriptEnabledAndroid={false}
-            onNavigationStateChange={this._onNavigationStateChange}
-            shouldInjectAJAXHandler={false}
-            startInLoadingState={false}
-          />
-        </View>
-      </View>
     );
-    */
   }
 
 }
@@ -408,7 +370,6 @@ var portraitStyles = StyleSheet.create({
     backgroundColor: "#DDDDDD",
     height: 150,
     width: 150,
-    borderStyle: "solid",
     borderColor: "#CCCCCC",
     borderWidth: 1 / PixelRatio.get(),
   },

@@ -82,7 +82,6 @@ var styles = StyleSheet.create({
     height: 100,
     marginRight: 5,
     width: 100,
-    borderStyle: "solid",
     borderColor: "#CCCCCC",
     borderWidth: 1 / PixelRatio.get(),
   },

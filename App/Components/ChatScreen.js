@@ -14,7 +14,7 @@ var {
 } = React;
 var Subscribable = require("Subscribable");
 
-
+var WEBVIEW_REF = 'chatRefView';
 var CHAT_URL = 'https://gitter.im/rwpod/public';
 var SCRIPT_INJECT = 'var element = document.getElementById("login-footer"); element.parentNode.removeChild(element);';
 
@@ -27,6 +27,7 @@ class ChatScreen extends React.Component {
     super(props, context);
     /*binds*/
     this._handleOpenChat = this._handleOpenChat.bind(this);
+    this._onNavigationStateChange = this._onNavigationStateChange.bind(this);
   }
 
   componentWillMount() {
@@ -52,18 +53,35 @@ class ChatScreen extends React.Component {
     });
   }
 
+  _onNavigationStateChange(navState) {
+    if (typeof navState.url !== 'undefined' && navState.url !== CHAT_URL) {
+      var url = navState.url;
+      LinkingIOS.canOpenURL(url, (supported) => {
+        if (!supported) {
+          AlertIOS.alert('Can\'t handle url: ' + url);
+        } else {
+          LinkingIOS.openURL(url);
+        }
+
+        if (navState.canGoBack) {
+          this.refs[WEBVIEW_REF].goBack();
+        }
+      });
+    }
+  }
+
   render() {
     return (
       <View style={styles.chatContainer}>
         <WebView
-          ref="webview"
+          ref={WEBVIEW_REF}
           automaticallyAdjustContentInsets={false}
           bounces={false}
           style={styles.webContainer}
           javaScriptEnabledAndroid={true}
           shouldInjectAJAXHandler={false}
-          startInLoadingState={true}
           url={CHAT_URL}
+          onNavigationStateChange={this._onNavigationStateChange}
           injectedJavaScript={SCRIPT_INJECT}
         />
       </View>

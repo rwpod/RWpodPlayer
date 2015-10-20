@@ -19,7 +19,6 @@ var {
 var Slider = require('react-native-slider');
 var { Icon } = require('react-native-icons');
 var AudioPlayer = require('../Lib/AudioPlayer');
-var Device = require('../Lib/Device');
 var ViewSubscriber = require('../Lib/ViewSubscriber');
 
 class PodcastScreen extends React.Component {
@@ -234,18 +233,10 @@ class PodcastScreen extends React.Component {
 
 
   render() {
-    if (Device.isIpad()) {
-      return (
-        <View style={portraitStyles.mainContainer}>
-          <Text>Comming soon for IPAD</Text>
-        </View>
-      )
+    if (this._isDeviseInPortrait()) {
+      return this._renderIphonePortrait();
     } else {
-      if (this._isDeviseInPortrait()) {
-        return this._renderIphonePortrait();
-      } else {
-        return this._renderIphoneLandscape();
-      }
+      return this._renderIphoneLandscape();
     }
   }
 
@@ -372,6 +363,8 @@ var portraitStyles = StyleSheet.create({
     width: 150,
     borderColor: "#CCCCCC",
     borderWidth: 1 / PixelRatio.get(),
+    justifyContent: "center",
+    textAlign: "center",
   },
   infoCellsContainer: {
     flex: 1,
@@ -461,129 +454,5 @@ var landscapeStyles = StyleSheet.create({
     backgroundColor: "#FFFFFF"
   },
 });
-
-/*
-var styles = StyleSheet.create({
-  portraitMainContainer: {
-    flex: 1,
-    marginTop: 65,
-    flexDirection: "column",
-    backgroundColor: "#FFFFFF"
-  },
-  portraitImageContainer: {
-    alignItems: "center",
-    marginTop: 3,
-    marginBottom: 3,
-  },
-  portraitPodcastImage: {
-    backgroundColor: "#dddddd",
-    height: 200,
-    width: 200,
-  },
-  portraitAudioContainer: {
-
-  },
-  portraitInfoContainer: {
-    alignItems: "center",
-  },
-  portraitPodcastDate: {
-    color: '#999999',
-    fontSize: 16,
-    padding: 5
-  },
-  portraitPodcastDuration: {
-    color: '#999999',
-    fontSize: 16,
-  },
-  portraitWebContainer: {
-    flex: 1,
-    alignItems: "stretch",
-    borderColor: "#CCCCCC",
-    borderWidth: 1,
-  },
-  portraitWebView: {
-    flex: 1,
-    backgroundColor: "#dddddd",
-  },
-  portraitSeekSlider: {
-    height: 20,
-    marginLeft: 30,
-    marginRight: 30,
-  },
-  sliderTrack: {
-    height: 10,
-    borderRadius: 4,
-    backgroundColor: 'white',
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 1
-    },
-    shadowRadius: 1,
-    shadowOpacity: 0.15,
-  },
-  sliderThumb: {
-    width: 20,
-    height: 20,
-    backgroundColor: '#f8a1d6',
-    borderColor: '#a4126e',
-    borderWidth: 5,
-    borderRadius: 10,
-    shadowColor: 'black',
-    shadowOffset: {
-      width: 0,
-      height: 2
-    },
-    shadowRadius: 2,
-    shadowOpacity: 0.35,
-  },
-
-
-  landscapeMainContainer: {
-    flex: 1,
-    marginTop: 65,
-    flexDirection: "row",
-    backgroundColor: "#FFFFFF"
-  },
-  landscapeCompContainer: {
-    alignItems: "center",
-    marginTop: 3,
-    marginBottom: 3,
-  },
-  landscapeImageContainer: {
-    alignItems: "center",
-    marginTop: 3,
-    marginBottom: 3,
-  },
-  landscapePodcastImage: {
-    backgroundColor: "#dddddd",
-    height: 200,
-    width: 200,
-  },
-  landscapeInfoContainer: {
-    alignItems: "center",
-  },
-  landscapePodcastDate: {
-    color: '#999999',
-    fontSize: 16,
-    padding: 5
-  },
-  landscapePodcastDuration: {
-    color: '#999999',
-    fontSize: 16,
-  },
-  landscapeWebContainer: {
-    flex: 1,
-    alignItems: "stretch",
-    borderColor: "#CCCCCC",
-    borderWidth: 1,
-  },
-  landscapeWebView: {
-    flex: 1,
-    backgroundColor: "#dddddd",
-  }
-});
-*/
-
 
 module.exports = PodcastScreen;

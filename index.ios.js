@@ -13,7 +13,6 @@ var {
 } = React;
 var EventEmitter = require("EventEmitter");
 var AboutScreen = require("./App/Components/AboutScreen");
-var ChatScreen = require("./App/Components/ChatScreen");
 var PodcastsScreen = require("./App/Components/PodcastsScreen");
 var ViewSubscriber = require("./App/Lib/ViewSubscriber");
 
@@ -28,7 +27,6 @@ class RWpodPlayer extends React.Component {
     this._isSelectedTab = this._isSelectedTab.bind(this);
     this._selectTab = this._selectTab.bind(this);
     this._refreshPodcasts = this._refreshPodcasts.bind(this);
-    this._openChat = this._openChat.bind(this);
     /* views */
     this._renderPodcasts = this._renderPodcasts.bind(this);
     this._renderAbout = this._renderAbout.bind(this);
@@ -53,14 +51,6 @@ class RWpodPlayer extends React.Component {
           selected={this._isSelectedTab('podcasts')}
           onPress={() => this._selectTab('podcasts')}>
           {this._renderPodcasts()}
-        </TabBarIOS.Item>
-        <TabBarIOS.Item
-          title={'Chat'}
-          systemIcon='contacts'
-          style={styles.tabBarItem}
-          selected={this._isSelectedTab('chat')}
-          onPress={() => this._selectTab('chat')}>
-          {this._renderChat()}
         </TabBarIOS.Item>
         <TabBarIOS.Item
           title={'About'}
@@ -91,23 +81,6 @@ class RWpodPlayer extends React.Component {
     )
   }
 
-  _renderChat() {
-    return (
-      <NavigatorIOS
-        tintColor={'#087C78'}
-        barTintColor={'#E2DBCB'}
-        style={styles.navigatorContainer}
-        initialRoute={{
-          component: ChatScreen,
-          title: "Chat",
-          rightButtonTitle: "Open",
-          passProps: { emitter: this.emitter },
-          onRightButtonPress: this._openChat
-        }}
-      />
-    )
-  }
-
   _renderAbout() {
     return (
       <AboutScreen />
@@ -116,10 +89,6 @@ class RWpodPlayer extends React.Component {
 
   _refreshPodcasts () {
     this.emitter.emit("refreshPodcasts");
-  }
-
-  _openChat () {
-    this.emitter.emit("openChat");
   }
 
   _isSelectedTab (tabName): boolean {

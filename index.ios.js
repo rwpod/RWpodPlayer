@@ -83,7 +83,15 @@ class RWpodPlayer extends React.Component {
 
   _renderAbout() {
     return (
-      <AboutScreen />
+      <NavigatorIOS
+        tintColor={'#087C78'}
+        barTintColor={'#E2DBCB'}
+        style={styles.navigatorContainer}
+        initialRoute={{
+          component: AboutScreen,
+          title: "About"
+        }}
+      />
     )
   }
 

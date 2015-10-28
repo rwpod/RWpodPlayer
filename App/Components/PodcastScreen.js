@@ -262,7 +262,7 @@ class PodcastScreen extends React.Component {
                 <TouchableHighlight onPress={this._onTogglePlay} underlayColor='#FFFFFF'>
                   <Icon
                     name={["PLAYING", "BUFFERING"].indexOf(this.state.audioData.status) >= 0 ? 'ion|pause' : 'ion|play'}
-                    size={90}
+                    size={70}
                     color='#000000'
                     style={audioControlStyles.buttonIcon}
                   />
@@ -270,7 +270,7 @@ class PodcastScreen extends React.Component {
                 {this.state.audioData.status !== "STOPPED" && <TouchableHighlight onPress={this._onStopPlay} underlayColor='#FFFFFF'>
                   <Icon
                     name='ion|stop'
-                    size={90}
+                    size={50}
                     color='#000000'
                     style={audioControlStyles.buttonIcon}
                   />
@@ -328,7 +328,47 @@ class PodcastScreen extends React.Component {
     var styles = landscapeStyles;
     return (
       <View style={styles.mainContainer}>
-        <Text>Comming soon</Text>
+        <View style={styles.topContainer}>
+          <Image
+            source={{uri}}
+            style={styles.podcastImage} />
+
+            <View style={styles.infoCellsContainer}>
+              <View style={styles.buttonsContainer}>
+                <TouchableHighlight onPress={this._onTogglePlay} underlayColor='#FFFFFF'>
+                  <Icon
+                    name={["PLAYING", "BUFFERING"].indexOf(this.state.audioData.status) >= 0 ? 'ion|pause' : 'ion|play'}
+                    size={70}
+                    color='#000000'
+                    style={audioControlStyles.buttonIcon}
+                  />
+                </TouchableHighlight>
+                {this.state.audioData.status !== "STOPPED" && <TouchableHighlight onPress={this._onStopPlay} underlayColor='#FFFFFF'>
+                  <Icon
+                    name='ion|stop'
+                    size={50}
+                    color='#000000'
+                    style={audioControlStyles.buttonIcon}
+                  />
+                </TouchableHighlight>}
+              </View>
+            </View>
+        </View>
+
+        <View style={styles.webContainer}>
+          <WebView
+            ref="webview"
+            automaticallyAdjustContentInsets={false}
+            bounces={true}
+            style={styles.webView}
+            html={this.state.podcastHTML}
+            javaScriptEnabledAndroid={true}
+            onNavigationStateChange={this._onNavigationStateChange}
+            shouldInjectAJAXHandler={false}
+            startInLoadingState={false}
+          />
+        </View>
+
       </View>
     );
   }
@@ -364,7 +404,6 @@ var portraitStyles = StyleSheet.create({
     borderColor: "#CCCCCC",
     borderWidth: 1 / PixelRatio.get(),
     justifyContent: "center",
-    textAlign: "center",
   },
   infoCellsContainer: {
     flex: 1,
@@ -435,7 +474,7 @@ var portraitStyles = StyleSheet.create({
     marginRight: 40,
   },
   webContainer: {
-    flex: 9,
+    flex: 6,
     alignItems: "stretch",
     borderColor: "#CCCCCC",
     borderWidth: 1,
@@ -449,9 +488,42 @@ var portraitStyles = StyleSheet.create({
 var landscapeStyles = StyleSheet.create({
   mainContainer: {
     flex: 1,
-    marginTop: 65,
-    flexDirection: "column",
+    marginTop: 30,
+    flexDirection: "row",
     backgroundColor: "#FFFFFF"
+  },
+  topContainer: {
+    flex: 4,
+    flexDirection: "column",
+    alignItems: "center",
+    height: 200,
+  },
+  podcastImage: {
+    backgroundColor: "#DDDDDD",
+    height: 140,
+    width: 140,
+    borderColor: "#CCCCCC",
+    borderWidth: 1 / PixelRatio.get(),
+    justifyContent: "center",
+  },
+  infoCellsContainer: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  buttonsContainer: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  webContainer: {
+    flex: 8,
+    alignItems: "stretch",
+    borderColor: "#CCCCCC",
+    borderWidth: 1,
+  },
+  webView: {
+    flex: 1,
+    backgroundColor: "#dddddd",
   },
 });
 

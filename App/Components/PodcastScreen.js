@@ -280,7 +280,7 @@ class PodcastScreen extends React.Component {
         </View>
 
         <View style={styles.sliderContainer}>
-            <Slider style={styles.seekSlider}
+          {["STOPPED", "BUFFERING"].indexOf(this.state.audioData.status) === -1 && <Slider style={styles.seekSlider}
                      trackStyle={styles.sliderTrack}
                      thumbStyle={styles.sliderThumb}
                      minimumTrackTintColor='#31a4db'
@@ -290,7 +290,7 @@ class PodcastScreen extends React.Component {
                      maximumValue={this.state.audioSeek.duration}
                      onSlidingStart={this._sliderOnSlidingStart}
                      onValueChange={this._sliderOnValueChange}
-                     onSlidingComplete={this._sliderOnSlidingComplete} />
+                     onSlidingComplete={this._sliderOnSlidingComplete} />}
           <View style={styles.sliderInfoContainer}>
             <Text style={styles.podcastPosition} numberOfLines={1}>
               {this.showHumanAudioPosition()}

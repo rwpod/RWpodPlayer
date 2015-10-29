@@ -46,7 +46,7 @@ class PodcastCell extends React.Component {
                 {podcast.human_date}
                 {' '}&bull;{' '}
                 <Text style={styles.podcastDuration}>
-                  Duration {podcast.audio_duration}
+                  Длительность {podcast.audio_duration}
                 </Text>
               </Text>
             </View>

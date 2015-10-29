@@ -26,7 +26,7 @@
 		B335CE911B604212004D5310 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B335CE8D1B604212004D5310 /* AppDelegate.m */; };
 		B335CE921B604212004D5310 /* AudioManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B335CE8F1B604212004D5310 /* AudioManager.m */; };
 		B335CE931B604212004D5310 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B335CE901B604212004D5310 /* RootViewController.swift */; };
-		B357C59C1BD4516F007D0EDB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B357C59B1BD4516F007D0EDB /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
+		B357C59C1BD4516F007D0EDB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B357C59B1BD4516F007D0EDB /* LaunchScreen.storyboard */; };
 		B38AEA5C1B7E5DAF00C249D5 /* libReactNativeIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B38AEA5B1B7E5DA700C249D5 /* libReactNativeIcons.a */; };
 		B38AEA601B7E5DD400C249D5 /* FontAwesome.otf in Resources */ = {isa = PBXBuildFile; fileRef = B38AEA5E1B7E5DD400C249D5 /* FontAwesome.otf */; };
 		B38AEA611B7E5DD400C249D5 /* ionicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B38AEA5F1B7E5DD400C249D5 /* ionicons.ttf */; };

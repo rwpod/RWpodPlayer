@@ -128,7 +128,7 @@ RCT_EXPORT_METHOD(getSeekStatus:(RCTResponseSenderBlock) callback)
 
 RCT_EXPORT_METHOD(setPlayingInfo:(NSString *)title album:(NSString *)album artist:(NSString *)artist)
 {
-  MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc]initWithImage:[UIImage imageNamed:@"RWpodLogo"]];
+  MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc]initWithImage:[UIImage imageNamed:@"AboutLogo"]];
   NSDictionary *nowPlayingInfo = [NSDictionary dictionaryWithObjectsAndKeys:title, MPMediaItemPropertyAlbumTitle, album, MPMediaItemPropertyAlbumArtist, artist, MPMediaItemPropertyTitle, artwork, MPMediaItemPropertyArtwork, @"Podcast", MPMediaItemPropertyGenre, @(MPMediaTypePodcast), MPMediaItemPropertyMediaType, nil];
   [MPNowPlayingInfoCenter defaultCenter].nowPlayingInfo = nowPlayingInfo;
 }

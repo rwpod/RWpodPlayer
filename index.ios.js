@@ -8,13 +8,14 @@ var React = require("react-native");
 var {
   AppRegistry,
   NavigatorIOS,
-  TabBarIOS,
   StyleSheet
 } = React;
 var EventEmitter = require("EventEmitter");
 var AboutScreen = require("./App/Components/AboutScreen");
 var PodcastsScreen = require("./App/Components/PodcastsScreen");
 var ViewSubscriber = require("./App/Lib/ViewSubscriber");
+
+var { TabBarIOS } = require('react-native-icons');
 
 
 class RWpodPlayer extends React.Component {
@@ -45,16 +46,22 @@ class RWpodPlayer extends React.Component {
         barTintColor={'#E2DBCB'}
         style={styles.tabBar}>
         <TabBarIOS.Item
-          title={'Podcasts'}
-          systemIcon='featured'
+          title={'Подкасты'}
+          iconName={'ion|radio-waves'}
+          selectedIconName={'ion|radio-waves'}
+          iconSize={32}
+          accessibilityLabel="Подкасты"
           style={styles.tabBarItem}
           selected={this._isSelectedTab('podcasts')}
           onPress={() => this._selectTab('podcasts')}>
           {this._renderPodcasts()}
         </TabBarIOS.Item>
         <TabBarIOS.Item
-          title={'About'}
-          systemIcon='more'
+          title={'О Нас'}
+          iconName={'ion|ios-people'}
+          selectedIconName={'ion|ios-people'}
+          iconSize={32}
+          accessibilityLabel="О Нас"
           style={styles.tabBarItem}
           selected={this._isSelectedTab('about')}
           onPress={() => this._selectTab('about')}>
@@ -72,8 +79,8 @@ class RWpodPlayer extends React.Component {
         style={styles.navigatorContainer}
         initialRoute={{
           component: PodcastsScreen,
-          title: "Podcasts",
-          rightButtonTitle: "Refresh",
+          title: "Подкасты",
+          rightButtonTitle: "Обновить",
           passProps: { emitter: this.emitter },
           onRightButtonPress: this._refreshPodcasts
         }}
@@ -89,7 +96,7 @@ class RWpodPlayer extends React.Component {
         style={styles.navigatorContainer}
         initialRoute={{
           component: AboutScreen,
-          title: "About"
+          title: "О Нас"
         }}
       />
     )

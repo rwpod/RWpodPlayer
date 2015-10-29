@@ -258,7 +258,7 @@ class PodcastScreen extends React.Component {
               <Text style={styles.podcastDate} numberOfLines={1}>
                 Дата: {podcast.human_date}
               </Text>
-              <View style={styles.buttonsContainer}>
+              {this.props.podcast.audio_url && <View style={styles.buttonsContainer}>
                 <TouchableHighlight onPress={this._onTogglePlay} underlayColor='#FFFFFF'>
                   <Icon
                     name={["PLAYING", "BUFFERING"].indexOf(this.state.audioData.status) >= 0 ? 'ion|pause' : 'ion|play'}
@@ -275,11 +275,11 @@ class PodcastScreen extends React.Component {
                     style={audioControlStyles.buttonIcon}
                   />
                 </TouchableHighlight>}
-              </View>
+              </View>}
             </View>
         </View>
 
-        <View style={styles.sliderContainer}>
+        {this.props.podcast.audio_url && <View style={styles.sliderContainer}>
           {["STOPPED", "BUFFERING"].indexOf(this.state.audioData.status) === -1 && <Slider style={styles.seekSlider}
                      trackStyle={styles.sliderTrack}
                      thumbStyle={styles.sliderThumb}
@@ -302,7 +302,7 @@ class PodcastScreen extends React.Component {
               {podcast.audio_duration}
             </Text>
            </View>
-        </View>
+        </View>}
 
         <View style={styles.webContainer}>
           <WebView
@@ -334,7 +334,7 @@ class PodcastScreen extends React.Component {
             style={styles.podcastImage} />
 
             <View style={styles.infoCellsContainer}>
-              <View style={styles.buttonsContainer}>
+              {this.props.podcast.audio_url && <View style={styles.buttonsContainer}>
                 <TouchableHighlight onPress={this._onTogglePlay} underlayColor='#FFFFFF'>
                   <Icon
                     name={["PLAYING", "BUFFERING"].indexOf(this.state.audioData.status) >= 0 ? 'ion|pause' : 'ion|play'}
@@ -351,7 +351,7 @@ class PodcastScreen extends React.Component {
                     style={audioControlStyles.buttonIcon}
                   />
                 </TouchableHighlight>}
-              </View>
+              </View>}
             </View>
         </View>
 

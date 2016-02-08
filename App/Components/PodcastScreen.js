@@ -311,7 +311,7 @@ class PodcastScreen extends React.Component {
             bounces={true}
             style={styles.webView}
             html={this.state.podcastHTML}
-            javaScriptEnabledAndroid={true}
+            javaScriptEnabled={true}
             onNavigationStateChange={this._onNavigationStateChange}
             shouldInjectAJAXHandler={false}
             startInLoadingState={false}
@@ -362,7 +362,7 @@ class PodcastScreen extends React.Component {
             bounces={true}
             style={styles.webView}
             html={this.state.podcastHTML}
-            javaScriptEnabledAndroid={true}
+            javaScriptEnabled={true}
             onNavigationStateChange={this._onNavigationStateChange}
             shouldInjectAJAXHandler={false}
             startInLoadingState={false}
